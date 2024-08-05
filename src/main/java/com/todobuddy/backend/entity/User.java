@@ -2,6 +2,8 @@ package com.todobuddy.backend.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -22,14 +24,18 @@ public class User extends BaseEntity {
     @Column(name = "user_id")
     private Long id;
 
-    @Column(name = "email")
-    private String email;
+    @Column(name = "email", unique = true)
+    private String email; // 이메일은 중복으로 가입될 수 없다.
 
     @Column(name = "password")
     private String password;
 
     @Column(name = "nickName")
     private String nickName;
+
+    @Enumerated(value = EnumType.STRING)
+    @Column(name = "role")
+    private Role role = Role.USER;
 
     @Builder
     public User(String email, String password, String nickName) {
