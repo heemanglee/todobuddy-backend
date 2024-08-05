@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: todo-buddy-backend-db-container
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_DATABASE: todo-buddy-backend-db
+      MYSQL_USER: dev
+      MYSQL_ROOT_PASSWORD: 1234
+      MYSQL_PASSWORD: 1234
+      volumes: data:/var/lib/mysql
+    ports:
+      - "3309:3306"
+
+volumes:
+  data:
