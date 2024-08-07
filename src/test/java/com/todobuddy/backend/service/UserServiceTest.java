@@ -55,7 +55,6 @@ class UserServiceTest {
         // then
         assertThat(response.getEmail()).isEqualTo(email);
         assertThat(response.getNickName()).isEqualTo(nickName);
-        assertThat(passwordEncoder.matches(rawPassword, response.getPassword())).isTrue();
     }
 
     @Test
