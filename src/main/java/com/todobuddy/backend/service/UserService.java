@@ -27,7 +27,7 @@ public class UserService {
     @Transactional
     public CreateUserResponse createUser(CreateUserRequest request) {
 
-        validateExistUserEmail(request); // 이메일은 중복하여 가입될 수 없다.
+        validateExistUserEmail(request.getEmail()); // 이메일은 중복하여 가입될 수 없다.
 
         User createUser = User.builder()
             .email(request.getEmail())
@@ -49,7 +49,7 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public LoginResponse login(LoginRequest request) {
-        User findUser = findUserByEmail(request);
+        User findUser = findUserByEmail(request.getEmail());
 
         if (!passwordEncoder.matches(request.getPassword(), findUser.getPassword())) {
             throw new IllegalArgumentException("사용자 정보가 일치하지 않습니다.");
@@ -59,10 +59,10 @@ public class UserService {
         return new LoginResponse(createJwtToken);
     }
 
-    private User findUserByEmail(LoginRequest request) {
-        return userRepository.findByEmail(request.getEmail())
+    private User findUserByEmail(String email) {
+        return userRepository.findByEmail(email)
             .orElseThrow(
-                () -> new IllegalArgumentException("가입되지 않은 이메일입니다. email=" + request.getEmail()));
+                () -> new IllegalArgumentException("가입되지 않은 이메일입니다. email=" + email));
     }
 
     private User findUserById(Long userId) {
@@ -70,10 +70,10 @@ public class UserService {
             .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다. id=" + userId));
     }
 
-    private void validateExistUserEmail(CreateUserRequest request) {
-        userRepository.findByEmail(request.getEmail())
+    private void validateExistUserEmail(String email) {
+        userRepository.findByEmail(email)
             .ifPresent(user -> {
-                throw new IllegalArgumentException("이미 가입된 이메일입니다. email=" + request.getEmail());
+                throw new IllegalArgumentException("이미 가입된 이메일입니다. email=" + email);
             });
     }
 }
