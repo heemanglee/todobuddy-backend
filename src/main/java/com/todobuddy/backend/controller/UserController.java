@@ -11,6 +11,7 @@ import com.todobuddy.backend.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @Slf4j
 @Tag(name = "User", description = "User API")
+@SecurityRequirement(name = "bearerAuth")
 public class UserController {
 
     private final UserService userService;
@@ -55,11 +57,10 @@ public class UserController {
     )
     @GetMapping("/me")
     public ResponseEntity<GetUserInfoResponse> getUserInfo(@CurrentUser User user) {
-        log.info("user.id: {}, user.email: {}", user.getId(), user.getEmail());
         return ResponseEntity.ok(userService.getUserInfo(user));
     }
 
-    @Operation(summary = "로그인", description = "로그인 API")
+    @Operation(summary = "로그인", description = "로그인 API", security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses(
         value = {
             @ApiResponse(responseCode = "200", description = "로그인 성공"),

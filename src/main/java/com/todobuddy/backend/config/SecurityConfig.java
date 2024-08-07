@@ -25,20 +25,13 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
             .csrf().disable()
-            .headers(
-                headerConfig -> {
-                    headerConfig.frameOptions(
-                        frameOptionsConfig -> frameOptionsConfig.disable()
-                    );
-                }
-            )
+            .headers(headers -> headers.frameOptions().disable())
             .authorizeHttpRequests(
                 authorizeRequest -> {
                     authorizeRequest
                         .requestMatchers("/users").permitAll() // 회원가입
                         .requestMatchers("/users/login").permitAll() // 로그인
-                        .requestMatchers("/users/me").hasAnyRole("USER", "ADMIN") // 내 정보 조회
-                        .requestMatchers("/swagger-ui/**", "/swagger-resource/**", "/api-docs/**").permitAll() // Swagger
+                        .requestMatchers("/swagger-ui/**", "/swagger-resource/**", "/api-docs/**", "/v3/api-docs/**").permitAll() // Swagger
                         .anyRequest().authenticated();
                 }
             )
