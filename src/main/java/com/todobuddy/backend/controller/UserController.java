@@ -37,8 +37,7 @@ public class UserController {
     @Operation(summary = "사용자 회원 가입", description = "사용자 회원 가입 API")
     @ApiResponses(
         value = {
-            @ApiResponse(responseCode = "201", description = "회원 가입 성공"),
-            @ApiResponse(responseCode = "400", description = "중복된 이메일을 사용한 경우 예외 발생")
+            @ApiResponse(responseCode = "201", description = "회원 가입 성공")
         }
     )
     public ResponseEntity<CreateUserResponse> createUser(
@@ -51,8 +50,7 @@ public class UserController {
     @Operation(summary = "사용자 정보 조회", description = "사용자 정보 조회 API")
     @ApiResponses(
         value = {
-            @ApiResponse(responseCode = "200", description = "사용자 정보 조회 성공"),
-            @ApiResponse(responseCode = "400", description = "userID로 사용자 조회 실패")
+            @ApiResponse(responseCode = "200", description = "사용자 정보 조회 성공")
         }
     )
     @GetMapping("/me")
@@ -63,9 +61,7 @@ public class UserController {
     @Operation(summary = "로그인", description = "로그인 API", security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses(
         value = {
-            @ApiResponse(responseCode = "200", description = "로그인 성공"),
-            @ApiResponse(responseCode = "400", description = "가입되지 않은 이메일 또는 비밀번호가 일치하지 않는 경우 예외 발생")
-        }
+            @ApiResponse(responseCode = "200", description = "로그인 성공")
     )
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> loginUser(@RequestBody LoginRequest request) {
