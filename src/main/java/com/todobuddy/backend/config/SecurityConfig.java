@@ -37,7 +37,8 @@ public class SecurityConfig {
                     authorizeRequest
                         .requestMatchers("/users").permitAll() // 회원가입
                         .requestMatchers("/users/login").permitAll() // 로그인
-                        .requestMatchers("/users/me").permitAll() // 내 정보 조회
+                        .requestMatchers("/users/me").hasAnyRole("USER", "ADMIN") // 내 정보 조회
+                        .requestMatchers("/swagger-ui/**", "/swagger-resource/**", "/api-docs/**").permitAll() // Swagger
                         .anyRequest().authenticated();
                 }
             )
