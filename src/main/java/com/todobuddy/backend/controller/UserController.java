@@ -62,6 +62,7 @@ public class UserController {
     @ApiResponses(
         value = {
             @ApiResponse(responseCode = "200", description = "로그인 성공")
+        }
     )
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> loginUser(@RequestBody LoginRequest request) {
