@@ -10,11 +10,9 @@ public class CreateUserResponse {
 
     private Long userId;
     private String email;
-    private String password;
     private String nickName;
 
     public static CreateUserResponse of(User user) {
-        return new CreateUserResponse(user.getId(), user.getEmail(), user.getPassword(),
-            user.getNickName());
+        return new CreateUserResponse(user.getId(), user.getEmail(), user.getNickName());
     }
 }

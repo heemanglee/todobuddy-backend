@@ -1,16 +1,19 @@
 package com.todobuddy.backend.security;
 
+import com.todobuddy.backend.entity.User;
 import java.util.Collection;
 import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+@AllArgsConstructor
+@Getter
 public class CustomUserDetails implements UserDetails {
 
-    private String email;
-    private String password;
-    private String nickName;
-    private List<GrantedAuthority> roles;
+    private User user; // 실제 user 객체
 
     @Override
     public boolean isAccountNonExpired() {
@@ -34,16 +37,17 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return roles;
+        return List.of(new SimpleGrantedAuthority(user.getRole().name()));
     }
 
     @Override
     public String getPassword() {
-        return password;
+        return user.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return email;
+        return user.getEmail();
     }
+
 }
