@@ -14,3 +14,8 @@ spring:
 
 logging.level:
   org.hibernate.SQL: debug # 발생되는 쿼리문을 로그로 출력
+
+jwt:
+  secret-key: ${JWT_SECRET_KEY}
+  expiration-time: ${JWT_EXPIRATION_TIME}
+  issuer: ${JWT_ISSUER}
