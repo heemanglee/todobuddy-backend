@@ -1,16 +1,21 @@
 package com.todobuddy.backend.service;
 
-import com.todobuddy.backend.dto.EmailVerifyRequest;
-import com.todobuddy.backend.exception.user.DuplicateEmailException;
-import com.todobuddy.backend.exception.user.UserErrorCode;
-import com.todobuddy.backend.exception.user.UserNotFoundException;
+import com.todobuddy.backend.dto.ChangePasswordRequest;
 import com.todobuddy.backend.dto.CreateUserRequest;
 import com.todobuddy.backend.dto.CreateUserResponse;
+import com.todobuddy.backend.dto.EmailVerifyRequest;
 import com.todobuddy.backend.dto.GetUserInfoResponse;
 import com.todobuddy.backend.dto.LoginRequest;
 import com.todobuddy.backend.dto.LoginResponse;
 import com.todobuddy.backend.entity.User;
+import com.todobuddy.backend.entity.VerificationCode;
+import com.todobuddy.backend.exception.common.CommonErrorCode;
+import com.todobuddy.backend.exception.common.NotSameVerificationException;
+import com.todobuddy.backend.exception.user.DuplicateEmailException;
+import com.todobuddy.backend.exception.user.UserErrorCode;
+import com.todobuddy.backend.exception.user.UserNotFoundException;
 import com.todobuddy.backend.repository.UserRepository;
+import com.todobuddy.backend.repository.VerificationCodeRepository;
 import com.todobuddy.backend.security.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +31,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
+    private final VerificationCodeRepository verificationCodeRepository;
 
     // 사용자 등록
     @Transactional
@@ -65,6 +71,32 @@ public class UserService {
     @Transactional(readOnly = true)
     public void isExistUserEmail(EmailVerifyRequest request) {
         findUserByEmail(request.getInputEmail());
+    }
+
+    @Transactional
+    public void changePassword(ChangePasswordRequest request) {
+
+        // 1차 비밀번호와 2차 비밀번호가 일치하는지 확인
+        if(!request.getPassword().equals(request.getConfirmPassword())) {
+            throw new NotSameVerificationException(UserErrorCode.NOT_SAME_PASSWORD);
+        }
+
+        // redis에 인증 코드를 할당받은 이메일이 존재하는지 확인
+        VerificationCode findVerificationCode = verificationCodeRepository.findById(request.getEmail())
+            .orElseThrow(() -> new UserNotFoundException(UserErrorCode.USER_NOT_FOUND));
+
+        // 인증 코드가 일치하는지 확인
+        log.info("findVerificationCode.getVerificationCode() : {}", findVerificationCode.getVerificationCode());
+        if(!findVerificationCode.getVerificationCode().equals(request.getVerificationCode()))  {
+            throw new NotSameVerificationException(CommonErrorCode.NOT_SAME_VERIFICATION);
+        }
+
+        // 비밀번호 변경
+        User findUser = findUserByEmail(request.getEmail());
+        findUser.updatePassword(passwordEncoder.encode(request.getPassword()));
+
+        // redis에 저장된 인종 코드 삭제
+        verificationCodeRepository.delete(findVerificationCode);
     }
 
     private User findUserByEmail(String email) {

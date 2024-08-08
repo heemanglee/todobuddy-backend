@@ -48,6 +48,9 @@ dependencies {
     // Google SMTP
     implementation 'org.springframework.boot:spring-boot-starter-mail'
 
+    // Spring Data Redis
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
 }
 
 tasks.named('test') {

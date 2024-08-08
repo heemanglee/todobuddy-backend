@@ -25,6 +25,11 @@ spring:
           starttls:
               enable: true
 
+  data:
+    redis:
+      host: localhost
+      port: 6399
+
 logging.level:
   org.hibernate.SQL: debug # 발생되는 쿼리문을 로그로 출력
 

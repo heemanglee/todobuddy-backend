@@ -1,6 +1,7 @@
 package com.todobuddy.backend.controller;
 
 import com.todobuddy.backend.common.Response;
+import com.todobuddy.backend.dto.ChangePasswordRequest;
 import com.todobuddy.backend.dto.CreateUserRequest;
 import com.todobuddy.backend.dto.CreateUserResponse;
 import com.todobuddy.backend.dto.EmailVerifyRequest;
@@ -22,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -85,7 +87,7 @@ public class UserController {
     @PostMapping("/check-email")
     public Response<Void> existUserEmail(@RequestBody EmailVerifyRequest request) {
         userService.isExistUserEmail(request);
-        return Response.of(null);
+        return Response.of(HttpStatus.NO_CONTENT, null);
     }
 
     @Operation(summary = "아이디/비밀번호 찾기 인증코드", description = "비밀번호 변경 시에 사용할 인증 코드")
@@ -105,5 +107,11 @@ public class UserController {
         String verifyCode = emailService.sendMail(emailMessage);
 
         return Response.of(HttpStatus.CREATED, new VerifyCodeResponse(verifyCode));
+    }
+
+    @PatchMapping("/password")
+    public Response<Void> changePassword(@RequestBody ChangePasswordRequest request) {
+        userService.changePassword(request);
+        return Response.of(HttpStatus.NO_CONTENT, null);
     }
 }

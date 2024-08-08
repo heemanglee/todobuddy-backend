@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 public class EmailService {
 
     private final JavaMailSender mailSender;
+    private final VerificationCodeService verificationCodeService;
 
     public String sendMail(EmailMessage emailMessage) {
         String verifyCode = createVerifyCode();
@@ -34,6 +35,9 @@ public class EmailService {
             mailSender.send(mimeMessage);
 
             log.info("이메일 전송 성공");
+
+            // redis에 인증 코드 10분간 저장
+            verificationCodeService.saveVerificationCode(emailMessage.getTo(), verifyCode);
 
             return verifyCode;
         } catch (MessagingException e) {
