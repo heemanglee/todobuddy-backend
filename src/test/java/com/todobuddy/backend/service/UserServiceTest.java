@@ -1,18 +1,26 @@
 package com.todobuddy.backend.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.todobuddy.backend.dto.ChangePasswordRequest;
 import com.todobuddy.backend.dto.CreateUserRequest;
 import com.todobuddy.backend.dto.CreateUserResponse;
+import com.todobuddy.backend.dto.EmailVerifyRequest;
 import com.todobuddy.backend.dto.LoginRequest;
 import com.todobuddy.backend.dto.LoginResponse;
 import com.todobuddy.backend.entity.User;
+import com.todobuddy.backend.entity.VerificationCode;
+import com.todobuddy.backend.exception.common.NotSameVerificationException;
 import com.todobuddy.backend.exception.user.DuplicateEmailException;
+import com.todobuddy.backend.exception.user.UserErrorCode;
+import com.todobuddy.backend.exception.user.UserNotFoundException;
 import com.todobuddy.backend.repository.UserRepository;
+import com.todobuddy.backend.repository.VerificationCodeRepository;
 import com.todobuddy.backend.security.jwt.JwtTokenProvider;
 import com.todobuddy.backend.util.TestUtils;
 import java.util.Optional;
@@ -35,6 +43,8 @@ class UserServiceTest {
     BCryptPasswordEncoder passwordEncoder; // 실제 빈을 주입받아 사용
     @Mock
     JwtTokenProvider jwtTokenProvider;
+    @Mock
+    VerificationCodeRepository verificationCodeRepository;
     @InjectMocks
     UserService userService;
 
@@ -80,7 +90,8 @@ class UserServiceTest {
         User existUser = TestUtils.createUser(duplicatedEmail, encodedPassword, nickName);
         when(userRepository.findByEmail(duplicatedEmail)).thenReturn(Optional.of(existUser));
 
-        assertThrows(DuplicateEmailException.class, () -> userService.createUser(request)); // 중복된 이메일로 가입 시도 -> 예외 발생
+        assertThrows(DuplicateEmailException.class,
+            () -> userService.createUser(request)); // 중복된 이메일로 가입 시도 -> 예외 발생
 
         verify(userRepository).findByEmail(duplicatedEmail); // 호출 여부 확인
     }
@@ -133,4 +144,99 @@ class UserServiceTest {
         assertThrows(IllegalArgumentException.class, () -> userService.login(request));
     }
 
+    @Test
+    @DisplayName("DB에 사용자가 존재하는 경우 이메일 검증에 성공한다.")
+    void isExistUserEmailTest() {
+        // given
+        String email = "test@test.com";
+        String password = "test";
+        String nickName = "test";
+
+        User createUser = TestUtils.createUser(email, password, nickName);
+        when(userRepository.findByEmail(email)).thenReturn(Optional.of(createUser));
+
+        // when
+        EmailVerifyRequest request = new EmailVerifyRequest();
+        ReflectionTestUtils.setField(request, "inputEmail", email);
+
+        // then
+        assertDoesNotThrow(() -> userService.isExistUserEmail(request));
+    }
+
+    @Test
+    @DisplayName("DB에 사용자가 존재하지 않는 경우 예외가 발생한다.")
+    void isNotExistUserEmailTest() {
+        // given
+        String email = "test@test.com";
+
+        when(userRepository.findByEmail(email)).thenThrow(
+            new UserNotFoundException(UserErrorCode.USER_NOT_FOUND));
+
+        // when
+        EmailVerifyRequest request = new EmailVerifyRequest();
+        ReflectionTestUtils.setField(request, "inputEmail", email);
+
+        // then
+        assertThrows(UserNotFoundException.class, () -> userService.isExistUserEmail(request));
+    }
+
+    @Test
+    @DisplayName("redis에 저장된 인증 코드와 사용자가 입력한 인증 코드가 일치하면 비밀번호 변경에 성공한다.")
+    void successChangePasswordTest() {
+        // given
+        String email = "test@test.com";
+        String prevPassword = "test";
+        String nickName = "test";
+        User createUser = TestUtils.createUser(email, prevPassword, nickName);
+
+        String verificationCode = "1234";
+        VerificationCode createVerificationCode = VerificationCode.builder()
+            .verificationCode(verificationCode)
+            .email(email)
+            .build();
+
+        when(verificationCodeRepository.findById(any())).thenReturn(Optional.of(createVerificationCode));
+        when(userRepository.findByEmail(any())).thenReturn(Optional.of(createUser));
+
+        // when
+        ChangePasswordRequest request = new ChangePasswordRequest();
+        ReflectionTestUtils.setField(request, "email", email);
+        ReflectionTestUtils.setField(request, "verificationCode", verificationCode);
+        ReflectionTestUtils.setField(request, "password", "newPassword");
+        ReflectionTestUtils.setField(request, "confirmPassword", "newPassword");
+
+        userService.changePassword(request);
+
+        // then
+        assertThat(passwordEncoder.matches(request.getPassword(), createUser.getPassword())).isTrue();
+    }
+
+    @Test
+    @DisplayName("redis에 저장된 인증 코드와 사용자가 입력한 인증 코드가 일치하지 않으면 예외가 발생한다.")
+    void failChangePasswordTest() {
+        // given
+        String email = "test@test.com";
+        String prevPassword = "test";
+        String nickName = "test";
+        User createUser = TestUtils.createUser(email, prevPassword, nickName);
+
+        String verificationCode = "1234";
+        String wrongVerificationCode = "5678";
+
+        VerificationCode createVerificationCode = VerificationCode.builder()
+            .email(email)
+            .verificationCode(verificationCode)
+            .build();
+        when(verificationCodeRepository.findById(any())).thenReturn(Optional.of(createVerificationCode));
+
+        // when
+        ChangePasswordRequest request = new ChangePasswordRequest();
+        ReflectionTestUtils.setField(request, "email", email);
+        ReflectionTestUtils.setField(request, "verificationCode", wrongVerificationCode);
+        ReflectionTestUtils.setField(request, "password", "newPassword");
+        ReflectionTestUtils.setField(request, "confirmPassword", "newPassword");
+
+        // then
+        assertThrows(NotSameVerificationException.class, () -> userService.changePassword(request));
+    }
 }
