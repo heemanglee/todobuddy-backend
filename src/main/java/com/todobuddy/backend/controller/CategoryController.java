@@ -3,6 +3,7 @@ package com.todobuddy.backend.controller;
 import com.todobuddy.backend.common.Response;
 import com.todobuddy.backend.dto.CreateCategoryRequest;
 import com.todobuddy.backend.dto.GetCategoriesResponse;
+import com.todobuddy.backend.dto.UpdateCategoryRequest;
 import com.todobuddy.backend.entity.User;
 import com.todobuddy.backend.security.CurrentUser;
 import com.todobuddy.backend.service.CategoryService;
@@ -15,6 +16,8 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -53,4 +56,18 @@ public class CategoryController {
         List<GetCategoriesResponse> response = categoryService.getCategories(user);
         return Response.of(response);
     }
+
+    @Operation(summary = "카테고리 이름 수정", description = "카테고리 이름 수정 API")
+    @ApiResponses(
+        value = {
+            @ApiResponse(responseCode = "204", description = "카테고리 이름 수정 성공")
+        }
+    )
+    @PatchMapping("/{categoryId}")
+    public Response<Void> updateCategory(@RequestBody UpdateCategoryRequest request,
+        @PathVariable Long categoryId) {
+        categoryService.updateCategory(categoryId, request);
+        return Response.of(HttpStatus.NO_CONTENT, null);
+    }
+
 }

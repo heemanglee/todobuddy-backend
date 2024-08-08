@@ -7,6 +7,7 @@ import static org.mockito.Mockito.when;
 
 import com.todobuddy.backend.dto.CreateCategoryRequest;
 import com.todobuddy.backend.dto.GetCategoriesResponse;
+import com.todobuddy.backend.dto.UpdateCategoryRequest;
 import com.todobuddy.backend.entity.Category;
 import com.todobuddy.backend.entity.User;
 import com.todobuddy.backend.exception.category.MaxCategoriesExceededException;
@@ -14,6 +15,7 @@ import com.todobuddy.backend.repository.CategoryRepository;
 import com.todobuddy.backend.util.TestUtils;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -84,7 +86,8 @@ class CategoryServiceTest {
         }
 
         List<GetCategoriesResponse> categories = list.stream()
-            .map(c -> new GetCategoriesResponse(c.getId(), c.getCategoryName(), c.getCategoryOrder()))
+            .map(c -> new GetCategoriesResponse(c.getId(), c.getCategoryName(),
+                c.getCategoryOrder()))
             .toList();
 
         when(categoryRepository.getCategories(user)).thenReturn(categories);
@@ -103,4 +106,23 @@ class CategoryServiceTest {
         assertThat(response.get(2).getCategoryName()).isEqualTo("category3");
         assertThat(response.get(2).getCategoryOder()).isEqualTo(3);
     }
+
+    @Test
+    @DisplayName("카테고리 이름을 성공적으로 수정할 수 있다.")
+    void successUpdateCategoryNameTest() {
+        // given
+        User user = TestUtils.createUser("test@test.com", "test", "test");
+        Category createCategory = TestUtils.createCategory(user, "category1");
+
+        when(categoryRepository.findById(any())).thenReturn(Optional.of(createCategory));
+
+        // when
+        UpdateCategoryRequest request = new UpdateCategoryRequest();
+        ReflectionTestUtils.setField(request, "categoryName", "category2");
+        categoryService.updateCategory(createCategory.getId(), request);
+
+        // then
+        assertThat(createCategory.getCategoryName()).isEqualTo("category2");
+    }
+
 }

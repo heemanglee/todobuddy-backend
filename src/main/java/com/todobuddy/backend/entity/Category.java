@@ -42,4 +42,8 @@ public class Category extends BaseEntity{
     @Column(name = "category_order")
     private int categoryOrder; // 카테고리 순서
 
+    public void updateCategoryName(String categoryName)  {
+        this.categoryName = categoryName;
+    }
+
 }

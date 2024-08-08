@@ -2,9 +2,11 @@ package com.todobuddy.backend.service;
 
 import com.todobuddy.backend.dto.CreateCategoryRequest;
 import com.todobuddy.backend.dto.GetCategoriesResponse;
+import com.todobuddy.backend.dto.UpdateCategoryRequest;
 import com.todobuddy.backend.entity.Category;
 import com.todobuddy.backend.entity.User;
 import com.todobuddy.backend.exception.category.CategoryErrorCode;
+import com.todobuddy.backend.exception.category.CategoryNotFoundException;
 import com.todobuddy.backend.exception.category.MaxCategoriesExceededException;
 import com.todobuddy.backend.repository.CategoryRepository;
 import java.util.List;
@@ -29,7 +31,8 @@ public class CategoryService {
         }
 
         // 카테고리 등록
-        Category createCategory = createCategory(user, request.getCategoryName(), request.getCategoryOrder());
+        Category createCategory = createCategory(user, request.getCategoryName(),
+            request.getCategoryOrder());
         categoryRepository.save(createCategory);
     }
 
@@ -37,6 +40,17 @@ public class CategoryService {
     @Transactional(readOnly = true)
     public List<GetCategoriesResponse> getCategories(User user) {
         return categoryRepository.getCategories(user);
+    }
+
+    @Transactional
+    public void updateCategory(Long categoryId, UpdateCategoryRequest request) {
+        Category findCategory = findCategoryById(categoryId);
+        findCategory.updateCategoryName(request.getCategoryName());
+    }
+
+    private Category findCategoryById(Long categoryId) {
+        return categoryRepository.findById(categoryId)
+            .orElseThrow(() -> new CategoryNotFoundException(CategoryErrorCode.CATEGORY_NOT_FOUND));
     }
 
     private static Category createCategory(User user, String categoryName, int categoryOrder) {
