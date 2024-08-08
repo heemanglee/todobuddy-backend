@@ -1,5 +1,8 @@
 package com.todobuddy.backend.service;
 
+import com.todobuddy.backend.exception.user.DuplicateEmailException;
+import com.todobuddy.backend.exception.user.UserErrorCode;
+import com.todobuddy.backend.exception.user.UserNotFoundException;
 import com.todobuddy.backend.dto.CreateUserRequest;
 import com.todobuddy.backend.dto.CreateUserResponse;
 import com.todobuddy.backend.dto.GetUserInfoResponse;
@@ -43,7 +46,6 @@ public class UserService {
     @Transactional(readOnly = true)
     public GetUserInfoResponse getUserInfo(User user) {
         User findUser = findUserById(user.getId());
-        log.info("findUser: {}", findUser);
         return GetUserInfoResponse.of(findUser);
     }
 
@@ -61,19 +63,18 @@ public class UserService {
 
     private User findUserByEmail(String email) {
         return userRepository.findByEmail(email)
-            .orElseThrow(
-                () -> new IllegalArgumentException("가입되지 않은 이메일입니다. email=" + email));
+            .orElseThrow(() -> new UserNotFoundException(UserErrorCode.USER_NOT_FOUND));
     }
 
     private User findUserById(Long userId) {
         return userRepository.findById(userId)
-            .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다. id=" + userId));
+            .orElseThrow(() -> new UserNotFoundException(UserErrorCode.USER_NOT_FOUND));
     }
 
     private void validateExistUserEmail(String email) {
         userRepository.findByEmail(email)
             .ifPresent(user -> {
-                throw new IllegalArgumentException("이미 가입된 이메일입니다. email=" + email);
+                throw new DuplicateEmailException(UserErrorCode.DUPLICATE_EMAIL);
             });
     }
 }
