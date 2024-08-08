@@ -1,5 +1,6 @@
 package com.todobuddy.backend.controller;
 
+import com.todobuddy.backend.common.Response;
 import com.todobuddy.backend.dto.CreateUserRequest;
 import com.todobuddy.backend.dto.CreateUserResponse;
 import com.todobuddy.backend.dto.GetUserInfoResponse;
@@ -16,7 +17,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -40,11 +40,11 @@ public class UserController {
             @ApiResponse(responseCode = "201", description = "회원 가입 성공")
         }
     )
-    public ResponseEntity<CreateUserResponse> createUser(
+    public Response<CreateUserResponse> createUser(
         @RequestBody CreateUserRequest request
     ) {
         CreateUserResponse response = userService.createUser(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        return Response.of(HttpStatus.CREATED, response);
     }
 
     @Operation(summary = "사용자 정보 조회", description = "사용자 정보 조회 API")
@@ -54,8 +54,9 @@ public class UserController {
         }
     )
     @GetMapping("/me")
-    public ResponseEntity<GetUserInfoResponse> getUserInfo(@CurrentUser User user) {
-        return ResponseEntity.ok(userService.getUserInfo(user));
+    public Response<GetUserInfoResponse> getUserInfo(@CurrentUser User user) {
+        GetUserInfoResponse response = userService.getUserInfo(user);
+        return Response.of(response);
     }
 
     @Operation(summary = "로그인", description = "로그인 API", security = @SecurityRequirement(name = "bearerAuth"))
@@ -65,8 +66,8 @@ public class UserController {
         }
     )
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> loginUser(@RequestBody LoginRequest request) {
+    public Response<LoginResponse> loginUser(@RequestBody LoginRequest request) {
         LoginResponse response = userService.login(request);
-        return ResponseEntity.ok(response);
+        return Response.of(response);
     }
 }
