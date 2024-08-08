@@ -109,6 +109,12 @@ public class UserController {
         return Response.of(HttpStatus.CREATED, new VerifyCodeResponse(verifyCode));
     }
 
+    @Operation(summary = "비밀번호 변경", description = "비밀번호 변경 API")
+    @ApiResponses(
+        value = {
+            @ApiResponse(responseCode = "204", description = "비밀번호 변경 성공")
+        }
+    )
     @PatchMapping("/password")
     public Response<Void> changePassword(@RequestBody ChangePasswordRequest request) {
         userService.changePassword(request);

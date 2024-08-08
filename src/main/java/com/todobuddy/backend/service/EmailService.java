@@ -1,8 +1,10 @@
 package com.todobuddy.backend.service;
 
+import com.todobuddy.backend.entity.VerificationCode;
 import com.todobuddy.backend.exception.common.CommonErrorCode;
 import com.todobuddy.backend.exception.common.EmailSendFailedException;
 import com.todobuddy.backend.mail.EmailMessage;
+import com.todobuddy.backend.repository.VerificationCodeRepository;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import java.util.Random;
@@ -19,8 +21,17 @@ public class EmailService {
 
     private final JavaMailSender mailSender;
     private final VerificationCodeService verificationCodeService;
+    private final VerificationCodeRepository verificationCodeRepository;
 
     public String sendMail(EmailMessage emailMessage) {
+
+        // 이전에 발급된 인증 코드가 만료되지 않은 경우 해당 코드를 반환한다.
+        VerificationCode findVerification = findVerificationCode(emailMessage.getTo());
+        if(findVerification != null) {
+            return findVerification.getVerificationCode();
+        }
+
+        // 새로운 인증 코드 생성
         String verifyCode = createVerifyCode();
 
         MimeMessage mimeMessage = mailSender.createMimeMessage();
@@ -44,6 +55,11 @@ public class EmailService {
             log.info("이메일 전송 실패", e);
             throw new EmailSendFailedException(CommonErrorCode.EMAIL_SEND_FAILED);
         }
+    }
+
+    private VerificationCode findVerificationCode(String email) {
+        return verificationCodeRepository.findById(email)
+            .orElse(null);
     }
 
     // 인증 코드 생성
