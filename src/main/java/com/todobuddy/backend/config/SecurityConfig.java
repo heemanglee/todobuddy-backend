@@ -32,7 +32,7 @@ public class SecurityConfig {
                         .requestMatchers("/users").permitAll() // 회원가입
                         .requestMatchers("/users/login").permitAll() // 로그인
                         .requestMatchers("/swagger-ui/**", "/swagger-resource/**", "/api-docs/**", "/v3/api-docs/**").permitAll() // Swagger
-                        .requestMatchers("/users/check-email").permitAll() // 이메일 검증
+                        .requestMatchers("/users/check-email", "/users/password").permitAll() // 이메일 검증
                         .anyRequest().authenticated();
                 }
             )

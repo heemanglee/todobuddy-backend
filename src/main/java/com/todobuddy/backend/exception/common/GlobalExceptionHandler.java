@@ -30,6 +30,12 @@ public class GlobalExceptionHandler {
         return handleException(errorCode);
     }
 
+    @ExceptionHandler(EmailSendFailedException.class)
+    public ResponseEntity<Object> handleEmailSendFailedException(EmailSendFailedException e) {
+        ErrorCode errorCode = CommonErrorCode.EMAIL_SEND_FAILED;
+        return handleException(errorCode);
+    }
+
     private ResponseEntity<Object> handleException(ErrorCode errorCode) {
         return ResponseEntity.status(errorCode.getHttpStatus())
             .body(createErrorResponse(errorCode));
