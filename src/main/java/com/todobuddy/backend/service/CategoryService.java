@@ -42,6 +42,14 @@ public class CategoryService {
         return categoryRepository.getCategories(user);
     }
 
+    // 카테고리 삭제
+    @Transactional
+    public void deleteCategory(Long categoryId) {
+        Category findCategory = findCategoryById(categoryId);
+        categoryRepository.delete(findCategory);
+    }
+
+    // 카테고리 이름 수정
     @Transactional
     public void updateCategory(Long categoryId, UpdateCategoryRequest request) {
         Category findCategory = findCategoryById(categoryId);

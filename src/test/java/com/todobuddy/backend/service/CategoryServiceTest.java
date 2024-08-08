@@ -126,4 +126,20 @@ class CategoryServiceTest {
         assertThat(createCategory.getCategoryName()).isEqualTo("category2");
     }
 
+    @Test
+    @DisplayName("사용자가 작성한 카테고리를 삭제할 수 있다.")
+    void deleteCategorySuccessTest() {
+        // given
+        User user = TestUtils.createUser("test@test.com", "test", "test");
+        Category createCategory = TestUtils.createCategory(user, "category1");
+
+        when(categoryRepository.findById(any())).thenReturn(Optional.of(createCategory));
+
+        // when
+        categoryService.deleteCategory(createCategory.getId());
+
+        // then
+        assertThat(categoryRepository.getCategories(user).size()).isEqualTo(0);
+    }
+
 }

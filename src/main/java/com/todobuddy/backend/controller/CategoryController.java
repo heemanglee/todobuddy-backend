@@ -16,6 +16,7 @@ import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -68,6 +69,18 @@ public class CategoryController {
     public Response<Void> updateCategory(@Valid @RequestBody UpdateCategoryRequest request,
         @PathVariable Long categoryId) {
         categoryService.updateCategory(categoryId, request);
+        return Response.of(HttpStatus.NO_CONTENT, null);
+    }
+
+    @Operation(summary = "카테고리 삭제", description = "카테고리 삭제 API")
+    @ApiResponses(
+        value = {
+            @ApiResponse(responseCode = "204", description = "카테고리 삭제 성공")
+        }
+    )
+    @DeleteMapping("/{categoryId}")
+    public Response<Void> deleteCategory(@PathVariable("categoryId") Long categoryId) {
+        categoryService.deleteCategory(categoryId);
         return Response.of(HttpStatus.NO_CONTENT, null);
     }
 
