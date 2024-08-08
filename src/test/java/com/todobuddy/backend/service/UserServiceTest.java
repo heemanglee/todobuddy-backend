@@ -11,6 +11,7 @@ import com.todobuddy.backend.dto.CreateUserResponse;
 import com.todobuddy.backend.dto.LoginRequest;
 import com.todobuddy.backend.dto.LoginResponse;
 import com.todobuddy.backend.entity.User;
+import com.todobuddy.backend.exception.user.DuplicateEmailException;
 import com.todobuddy.backend.repository.UserRepository;
 import com.todobuddy.backend.security.jwt.JwtTokenProvider;
 import com.todobuddy.backend.util.TestUtils;
@@ -79,7 +80,7 @@ class UserServiceTest {
         User existUser = TestUtils.createUser(duplicatedEmail, encodedPassword, nickName);
         when(userRepository.findByEmail(duplicatedEmail)).thenReturn(Optional.of(existUser));
 
-        assertThrows(IllegalArgumentException.class, () -> userService.createUser(request)); // 중복된 이메일로 가입 시도 -> 예외 발생
+        assertThrows(DuplicateEmailException.class, () -> userService.createUser(request)); // 중복된 이메일로 가입 시도 -> 예외 발생
 
         verify(userRepository).findByEmail(duplicatedEmail); // 호출 여부 확인
     }
