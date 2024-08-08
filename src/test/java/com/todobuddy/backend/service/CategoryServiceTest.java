@@ -77,13 +77,14 @@ class CategoryServiceTest {
         User user = TestUtils.createUser("test@test.com", "test", "test");
 
         List<Category> list = new ArrayList<>();
-        for (int i = 0; i < 3; i++) {
+        for (int i = 1; i <= 3; i++) {
             Category category = TestUtils.createCategory(user, "category" + i);
+            ReflectionTestUtils.setField(category, "categoryOrder", i);
             list.add(category);
         }
 
         List<GetCategoriesResponse> categories = list.stream()
-            .map(c -> new GetCategoriesResponse(c.getId(), c.getCategoryName()))
+            .map(c -> new GetCategoriesResponse(c.getId(), c.getCategoryName(), c.getCategoryOrder()))
             .toList();
 
         when(categoryRepository.getCategories(user)).thenReturn(categories);
@@ -93,8 +94,13 @@ class CategoryServiceTest {
 
         // then
         assertThat(response.size()).isEqualTo(3);
-        assertThat(response.get(0).getCategoryName()).isEqualTo("category0");
-        assertThat(response.get(1).getCategoryName()).isEqualTo("category1");
-        assertThat(response.get(2).getCategoryName()).isEqualTo("category2");
+        assertThat(response.get(0).getCategoryName()).isEqualTo("category1");
+        assertThat(response.get(0).getCategoryOder()).isEqualTo(1);
+
+        assertThat(response.get(1).getCategoryName()).isEqualTo("category2");
+        assertThat(response.get(1).getCategoryOder()).isEqualTo(2);
+
+        assertThat(response.get(2).getCategoryName()).isEqualTo("category3");
+        assertThat(response.get(2).getCategoryOder()).isEqualTo(3);
     }
 }

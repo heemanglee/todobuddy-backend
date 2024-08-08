@@ -21,7 +21,8 @@ public class CategoryCustomRepositoryImpl implements CategoryCustomRepository {
             .select(Projections.constructor(
                 GetCategoriesResponse.class,
                 category.id,
-                category.categoryName
+                category.categoryName,
+                category.categoryOrder
             ))
             .from(category)
             .join(category.user, QUser.user)

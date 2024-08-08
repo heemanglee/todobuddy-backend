@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class Category {
+public class Category extends BaseEntity{
 
     public static final int MAX_COUNT = 3; // 사용자가 등록할 수 있는 최대 개수
 
@@ -33,9 +33,13 @@ public class Category {
     private User user; // 카테고리를 등록한 사용자
 
     @Builder
-    public Category(String categoryName, User user) {
+    public Category(String categoryName, User user, int categoryOrder) {
         this.categoryName = categoryName;
         this.user = user;
+        this.categoryOrder = categoryOrder;
     }
+
+    @Column(name = "category_order")
+    private int categoryOrder; // 카테고리 순서
 
 }

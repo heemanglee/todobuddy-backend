@@ -29,7 +29,7 @@ public class CategoryService {
         }
 
         // 카테고리 등록
-        Category createCategory = createCategory(user, request.getCategoryName());
+        Category createCategory = createCategory(user, request.getCategoryName(), request.getCategoryOrder());
         categoryRepository.save(createCategory);
     }
 
@@ -39,10 +39,11 @@ public class CategoryService {
         return categoryRepository.getCategories(user);
     }
 
-    private static Category createCategory(User user, String categoryName) {
+    private static Category createCategory(User user, String categoryName, int categoryOrder) {
         return Category.builder()
             .categoryName(categoryName)
             .user(user)
+            .categoryOrder(categoryOrder)
             .build();
     }
 
