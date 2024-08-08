@@ -3,6 +3,7 @@ package com.todobuddy.backend.controller;
 import com.todobuddy.backend.common.Response;
 import com.todobuddy.backend.dto.CreateUserRequest;
 import com.todobuddy.backend.dto.CreateUserResponse;
+import com.todobuddy.backend.dto.EmailVerifyRequest;
 import com.todobuddy.backend.dto.GetUserInfoResponse;
 import com.todobuddy.backend.dto.LoginRequest;
 import com.todobuddy.backend.dto.LoginResponse;
@@ -69,5 +70,17 @@ public class UserController {
     public Response<LoginResponse> loginUser(@RequestBody LoginRequest request) {
         LoginResponse response = userService.login(request);
         return Response.of(response);
+    }
+
+    @Operation(summary = "이메일 검증", description = "아이디/비밀번호 찾기에서 인증 코드를 전송할 이메일")
+    @ApiResponses(
+        value = {
+            @ApiResponse(responseCode = "200", description = "이메일 검증 성공")
+        }
+    )
+    @PostMapping("/check-email")
+    public Response<Void> existUserEmail(@RequestBody EmailVerifyRequest request) {
+        userService.isExistUserEmail(request);
+        return Response.of(null);
     }
 }

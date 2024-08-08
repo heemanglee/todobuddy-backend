@@ -1,5 +1,6 @@
 package com.todobuddy.backend.service;
 
+import com.todobuddy.backend.dto.EmailVerifyRequest;
 import com.todobuddy.backend.exception.user.DuplicateEmailException;
 import com.todobuddy.backend.exception.user.UserErrorCode;
 import com.todobuddy.backend.exception.user.UserNotFoundException;
@@ -59,6 +60,11 @@ public class UserService {
 
         String createJwtToken = jwtTokenProvider.generateToken(findUser);
         return new LoginResponse(createJwtToken);
+    }
+
+    @Transactional(readOnly = true)
+    public void isExistUserEmail(EmailVerifyRequest request) {
+        findUserByEmail(request.getInputEmail());
     }
 
     private User findUserByEmail(String email) {

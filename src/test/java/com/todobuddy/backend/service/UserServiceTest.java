@@ -1,6 +1,7 @@
 package com.todobuddy.backend.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
@@ -8,10 +9,13 @@ import static org.mockito.Mockito.when;
 
 import com.todobuddy.backend.dto.CreateUserRequest;
 import com.todobuddy.backend.dto.CreateUserResponse;
+import com.todobuddy.backend.dto.EmailVerifyRequest;
 import com.todobuddy.backend.dto.LoginRequest;
 import com.todobuddy.backend.dto.LoginResponse;
 import com.todobuddy.backend.entity.User;
 import com.todobuddy.backend.exception.user.DuplicateEmailException;
+import com.todobuddy.backend.exception.user.UserErrorCode;
+import com.todobuddy.backend.exception.user.UserNotFoundException;
 import com.todobuddy.backend.repository.UserRepository;
 import com.todobuddy.backend.security.jwt.JwtTokenProvider;
 import com.todobuddy.backend.util.TestUtils;
@@ -131,6 +135,41 @@ class UserServiceTest {
 
         // then
         assertThrows(IllegalArgumentException.class, () -> userService.login(request));
+    }
+
+    @Test
+    @DisplayName("DB에 사용자가 존재하는 경우 이메일 검증에 성공한다.")
+    void isExistUserEmailTest() {
+        // given
+        String email = "test@test.com";
+        String password = "test";
+        String nickName = "test";
+
+        User createUser = TestUtils.createUser(email, password, nickName);
+        when(userRepository.findByEmail(email)).thenReturn(Optional.of(createUser));
+
+        // when
+        EmailVerifyRequest request = new EmailVerifyRequest();
+        ReflectionTestUtils.setField(request, "inputEmail", email);
+
+        // then
+        assertDoesNotThrow(() -> userService.isExistUserEmail(request));
+    }
+
+    @Test
+    @DisplayName("DB에 사용자가 존재하지 않는 경우 예외가 발생한다.")
+    void isNotExistUserEmailTest() {
+        // given
+        String email = "test@test.com";
+
+        when(userRepository.findByEmail(email)).thenThrow(new UserNotFoundException(UserErrorCode.USER_NOT_FOUND));
+
+        // when
+        EmailVerifyRequest request = new EmailVerifyRequest();
+        ReflectionTestUtils.setField(request, "inputEmail", email);
+
+        // then
+        assertThrows(UserNotFoundException.class, () -> userService.isExistUserEmail(request));
     }
 
 }
