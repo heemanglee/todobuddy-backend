@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -40,7 +41,7 @@ public class CategoryController {
     )
     @PostMapping
     public Response<Void> createCategory(@CurrentUser User user,
-        @RequestBody CreateCategoryRequest request) {
+        @Valid @RequestBody CreateCategoryRequest request) {
         categoryService.createCategory(user, request);
         return Response.of(HttpStatus.CREATED, null);
     }
@@ -64,7 +65,7 @@ public class CategoryController {
         }
     )
     @PatchMapping("/{categoryId}")
-    public Response<Void> updateCategory(@RequestBody UpdateCategoryRequest request,
+    public Response<Void> updateCategory(@Valid @RequestBody UpdateCategoryRequest request,
         @PathVariable Long categoryId) {
         categoryService.updateCategory(categoryId, request);
         return Response.of(HttpStatus.NO_CONTENT, null);

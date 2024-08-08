@@ -19,6 +19,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -48,7 +49,7 @@ public class UserController {
         }
     )
     public Response<CreateUserResponse> createUser(
-        @RequestBody CreateUserRequest request
+        @Valid @RequestBody CreateUserRequest request
     ) {
         CreateUserResponse response = userService.createUser(request);
         return Response.of(HttpStatus.CREATED, response);
@@ -73,7 +74,7 @@ public class UserController {
         }
     )
     @PostMapping("/login")
-    public Response<LoginResponse> loginUser(@RequestBody LoginRequest request) {
+    public Response<LoginResponse> loginUser(@Valid @RequestBody LoginRequest request) {
         LoginResponse response = userService.login(request);
         return Response.of(response);
     }
@@ -85,7 +86,7 @@ public class UserController {
         }
     )
     @PostMapping("/check-email")
-    public Response<Void> existUserEmail(@RequestBody EmailVerifyRequest request) {
+    public Response<Void> existUserEmail(@Valid @RequestBody EmailVerifyRequest request) {
         userService.isExistUserEmail(request);
         return Response.of(HttpStatus.NO_CONTENT, null);
     }
@@ -97,7 +98,7 @@ public class UserController {
         }
     )
     @PostMapping("/password")
-    public Response<VerifyCodeResponse> sendVerifyCode(@RequestBody EmailVerifyRequest request) {
+    public Response<VerifyCodeResponse> sendVerifyCode(@Valid @RequestBody EmailVerifyRequest request) {
         EmailMessage emailMessage = EmailMessage.builder()
             .to(request.getInputEmail())
             .subject("todobuddy 인증 코드입니다.")
@@ -116,7 +117,7 @@ public class UserController {
         }
     )
     @PatchMapping("/password")
-    public Response<Void> changePassword(@RequestBody ChangePasswordRequest request) {
+    public Response<Void> changePassword(@Valid @RequestBody ChangePasswordRequest request) {
         userService.changePassword(request);
         return Response.of(HttpStatus.NO_CONTENT, null);
     }

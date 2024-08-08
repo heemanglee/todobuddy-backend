@@ -10,6 +10,7 @@ import com.todobuddy.backend.exception.user.DuplicateEmailException;
 import com.todobuddy.backend.exception.user.UserErrorCode;
 import com.todobuddy.backend.exception.user.UserNotFoundException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -50,6 +51,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MaxCategoriesExceededException.class)
     public ResponseEntity<Object> handleMaxCategoriesExceededException(MaxCategoriesExceededException e) {
         ErrorCode errorCode = CategoryErrorCode.MAX_CATEGORIES_EXCEEDED;
+        return handleException(errorCode);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Object> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+        ErrorCode errorCode = CommonErrorCode.ARGUMENT_VALIDATION_FAILED;
         return handleException(errorCode);
     }
 

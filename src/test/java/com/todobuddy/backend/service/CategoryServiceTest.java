@@ -46,6 +46,7 @@ class CategoryServiceTest {
         // then
         CreateCategoryRequest request = new CreateCategoryRequest();
         ReflectionTestUtils.setField(request, "categoryName", categoryName);
+        ReflectionTestUtils.setField(request, "categoryOrder", 1);
 
         categoryService.createCategory(user, request);
 

@@ -2,6 +2,7 @@ package com.todobuddy.backend.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 
 @Getter
@@ -12,6 +13,7 @@ public class CreateCategoryRequest {
     @Schema(description = "카테고리 이름", example = "토익")
     private String categoryName;
 
+    @NotNull(message = "카테고리 순서를 입력하세요.")
     @Schema(description = "카테고리 순서", example = "1")
-    private int categoryOrder;
+    private Integer categoryOrder;
 }
