@@ -1,11 +1,13 @@
 package com.todobuddy.backend.service;
 
 import com.todobuddy.backend.dto.CreateCategoryRequest;
+import com.todobuddy.backend.dto.GetCategoriesResponse;
 import com.todobuddy.backend.entity.Category;
 import com.todobuddy.backend.entity.User;
 import com.todobuddy.backend.exception.category.CategoryErrorCode;
 import com.todobuddy.backend.exception.category.MaxCategoriesExceededException;
 import com.todobuddy.backend.repository.CategoryRepository;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,6 +31,12 @@ public class CategoryService {
         // 카테고리 등록
         Category createCategory = createCategory(user, request.getCategoryName());
         categoryRepository.save(createCategory);
+    }
+
+    // 사용자가 등록한 모든 카테고리 조회
+    @Transactional(readOnly = true)
+    public List<GetCategoriesResponse> getCategories(User user) {
+        return categoryRepository.getCategories(user);
     }
 
     private static Category createCategory(User user, String categoryName) {
