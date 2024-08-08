@@ -1,5 +1,7 @@
 package com.todobuddy.backend.common;
 
+import com.todobuddy.backend.exception.category.CategoryErrorCode;
+import com.todobuddy.backend.exception.category.MaxCategoriesExceededException;
 import com.todobuddy.backend.exception.common.CommonErrorCode;
 import com.todobuddy.backend.exception.common.EmailSendFailedException;
 import com.todobuddy.backend.exception.common.ErrorCode;
@@ -8,6 +10,7 @@ import com.todobuddy.backend.exception.user.DuplicateEmailException;
 import com.todobuddy.backend.exception.user.UserErrorCode;
 import com.todobuddy.backend.exception.user.UserNotFoundException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -42,6 +45,18 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(NotSameVerificationException.class)
     public ResponseEntity<Object> handleNotSameVerificationException(NotSameVerificationException e) {
         ErrorCode errorCode = CommonErrorCode.NOT_SAME_VERIFICATION;
+        return handleException(errorCode);
+    }
+
+    @ExceptionHandler(MaxCategoriesExceededException.class)
+    public ResponseEntity<Object> handleMaxCategoriesExceededException(MaxCategoriesExceededException e) {
+        ErrorCode errorCode = CategoryErrorCode.MAX_CATEGORIES_EXCEEDED;
+        return handleException(errorCode);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Object> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+        ErrorCode errorCode = CommonErrorCode.ARGUMENT_VALIDATION_FAILED;
         return handleException(errorCode);
     }
 
