@@ -1,6 +1,9 @@
-package com.todobuddy.backend.exception.common;
+package com.todobuddy.backend.common;
 
-import com.todobuddy.backend.common.ErrorResponse;
+import com.todobuddy.backend.exception.common.CommonErrorCode;
+import com.todobuddy.backend.exception.common.EmailSendFailedException;
+import com.todobuddy.backend.exception.common.ErrorCode;
+import com.todobuddy.backend.exception.common.NotSameVerificationException;
 import com.todobuddy.backend.exception.user.DuplicateEmailException;
 import com.todobuddy.backend.exception.user.UserErrorCode;
 import com.todobuddy.backend.exception.user.UserNotFoundException;
@@ -33,6 +36,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(EmailSendFailedException.class)
     public ResponseEntity<Object> handleEmailSendFailedException(EmailSendFailedException e) {
         ErrorCode errorCode = CommonErrorCode.EMAIL_SEND_FAILED;
+        return handleException(errorCode);
+    }
+
+    @ExceptionHandler(NotSameVerificationException.class)
+    public ResponseEntity<Object> handleNotSameVerificationException(NotSameVerificationException e) {
+        ErrorCode errorCode = CommonErrorCode.NOT_SAME_VERIFICATION;
         return handleException(errorCode);
     }
 
