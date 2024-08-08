@@ -7,7 +7,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: create # application 실행 시 기존 테이블 drop 후 create
+      ddl-auto: create
     properties:
       hibernate:
         format_sql: true
@@ -31,7 +31,7 @@ spring:
       port: 6399
 
 logging.level:
-  org.hibernate.SQL: debug # 발생되는 쿼리문을 로그로 출력
+  org.hibernate.SQL: debug
 
 jwt:
   secret-key: ${JWT_SECRET_KEY}

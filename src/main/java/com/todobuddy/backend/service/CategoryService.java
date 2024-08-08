@@ -1,0 +1,41 @@
+package com.todobuddy.backend.service;
+
+import com.todobuddy.backend.dto.CreateCategoryRequest;
+import com.todobuddy.backend.entity.Category;
+import com.todobuddy.backend.entity.User;
+import com.todobuddy.backend.exception.category.CategoryErrorCode;
+import com.todobuddy.backend.exception.category.MaxCategoriesExceededException;
+import com.todobuddy.backend.repository.CategoryRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+@Service
+@RequiredArgsConstructor
+public class CategoryService {
+
+    private final CategoryRepository categoryRepository;
+
+    // 카테고리 등록
+    @Transactional
+    public void createCategory(User user, CreateCategoryRequest request) {
+
+        // 사용자는 최대 3개의 카테고리를 등록할 수 있다.
+        Long categoryCount = categoryRepository.countByUser(user);
+        if (categoryCount >= Category.MAX_COUNT) { // 등록된 카테고리가 3개 이상이면 더 이상 등록할 수 없다.
+            throw new MaxCategoriesExceededException(CategoryErrorCode.MAX_CATEGORIES_EXCEEDED);
+        }
+
+        // 카테고리 등록
+        Category createCategory = createCategory(user, request.getCategoryName());
+        categoryRepository.save(createCategory);
+    }
+
+    private static Category createCategory(User user, String categoryName) {
+        return Category.builder()
+            .categoryName(categoryName)
+            .user(user)
+            .build();
+    }
+
+}
