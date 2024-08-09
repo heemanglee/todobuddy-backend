@@ -7,6 +7,7 @@ import com.todobuddy.backend.dto.EmailVerifyRequest;
 import com.todobuddy.backend.dto.GetUserInfoResponse;
 import com.todobuddy.backend.dto.LoginRequest;
 import com.todobuddy.backend.dto.LoginResponse;
+import com.todobuddy.backend.entity.Category;
 import com.todobuddy.backend.entity.User;
 import com.todobuddy.backend.entity.VerificationCode;
 import com.todobuddy.backend.exception.common.CommonErrorCode;
@@ -14,9 +15,11 @@ import com.todobuddy.backend.exception.common.NotSameVerificationException;
 import com.todobuddy.backend.exception.user.DuplicateEmailException;
 import com.todobuddy.backend.exception.user.UserErrorCode;
 import com.todobuddy.backend.exception.user.UserNotFoundException;
+import com.todobuddy.backend.repository.CategoryRepository;
 import com.todobuddy.backend.repository.UserRepository;
 import com.todobuddy.backend.repository.VerificationCodeRepository;
 import com.todobuddy.backend.security.jwt.JwtTokenProvider;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -32,6 +35,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
     private final VerificationCodeRepository verificationCodeRepository;
+    private final CategoryRepository categoryRepository;
 
     // 사용자 등록
     @Transactional
@@ -100,7 +104,13 @@ public class UserService {
 
     @Transactional
     public void deleteUser(User user) {
-        userRepository.delete(user);
+        List<Category> categories = categoryRepository.findByUser(user);
+        List<Long> categoryIds = categories.stream()
+            .map(Category::getId)
+            .toList();
+
+        categoryRepository.deleteAllByIdInQuery(categoryIds); // 사용자가 작성한 모든 카테고리 삭제
+        userRepository.deleteById(user.getId()); // 사용자 삭제
     }
 
     private User findUserByEmail(String email) {

@@ -20,10 +20,12 @@ import com.todobuddy.backend.exception.common.NotSameVerificationException;
 import com.todobuddy.backend.exception.user.DuplicateEmailException;
 import com.todobuddy.backend.exception.user.UserErrorCode;
 import com.todobuddy.backend.exception.user.UserNotFoundException;
+import com.todobuddy.backend.repository.CategoryRepository;
 import com.todobuddy.backend.repository.UserRepository;
 import com.todobuddy.backend.repository.VerificationCodeRepository;
 import com.todobuddy.backend.security.jwt.JwtTokenProvider;
 import com.todobuddy.backend.util.TestUtils;
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -46,6 +48,8 @@ class UserServiceTest {
     JwtTokenProvider jwtTokenProvider;
     @Mock
     VerificationCodeRepository verificationCodeRepository;
+    @Mock
+    CategoryRepository categoryRepository;
     @InjectMocks
     UserService userService;
 
@@ -261,24 +265,18 @@ class UserServiceTest {
         // given
         User user = TestUtils.createUser("test@test.com", "test", "test");
 
-        Category category1 = TestUtils.createCategory(user, "category1");
-        Category category2 = TestUtils.createCategory(user, "category2");
-        Category category3 = TestUtils.createCategory(user, "category3");
-
-        user.getCategories().add(category1);
-        user.getCategories().add(category2);
-        user.getCategories().add(category3);
-
-        assertThat(user.getCategories().size()).isEqualTo(3);
-        assertThat(user.getCategories()).containsExactly(category1, category2, category3);
+        for(int i = 1; i <= 3; i++) {
+            Category category = TestUtils.createCategory(user, "category" + i);
+            categoryRepository.save(category);
+        }
 
         // when
-        user.getCategories().clear(); // // cascade = CascadeType.REMOVE
         userService.deleteUser(user);
         ReflectionTestUtils.setField(user, "deleted", true);
 
         // then
         assertThat(user.isDeleted()).isTrue();
-        assertThat(user.getCategories().size()).isEqualTo(0);
+        List<Category> remainingCategories = categoryRepository.findByUser(user);
+        assertThat(remainingCategories).isEmpty();
     }
 }

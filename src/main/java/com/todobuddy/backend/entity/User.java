@@ -1,7 +1,6 @@
 package com.todobuddy.backend.entity;
 
 import com.todobuddy.backend.common.BooleanToIntegerConverter;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
@@ -10,10 +9,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import java.util.ArrayList;
-import java.util.List;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -44,9 +40,6 @@ public class User extends BaseEntity {
     @Enumerated(value = EnumType.STRING)
     @Column(name = "role")
     private Role role = Role.USER;
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
-    List<Category> categories = new ArrayList<>();
 
     @Builder
     public User(String email, String password, String nickName) {
