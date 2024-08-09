@@ -65,3 +65,18 @@ dependencies {
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+ext.profile = (!project.hasProperty('profile') || !profile)  ? 'local' : profile
+sourceSets {
+    main {
+        resources {
+            srcDirs "src/main/resources", "src/main/resources/application-${profile}"
+        }
+    }
+}
+
+// processResources 단계에서 동일한 파일 이름(ex. application-prod.yml)을 가진 리소스가 두 번 이상 발견되었을 때 발생한다.
+// processResources 작업에 대한 중복 파일 처리 전략을 설정하여 해결한다.
+tasks.named('processResources') {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
