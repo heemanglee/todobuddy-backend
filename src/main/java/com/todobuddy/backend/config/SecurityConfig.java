@@ -29,10 +29,10 @@ public class SecurityConfig {
             .authorizeHttpRequests(
                 authorizeRequest -> {
                     authorizeRequest
-                        .requestMatchers("/users").permitAll() // 회원가입
-                        .requestMatchers("/users/login").permitAll() // 로그인
+                        .requestMatchers("/api/users").permitAll() // 회원가입
+                        .requestMatchers("/api/users/login").permitAll() // 로그인
                         .requestMatchers("/swagger-ui/**", "/swagger-resource/**", "/api-docs/**", "/v3/api-docs/**").permitAll() // Swagger
-                        .requestMatchers("/users/check-email", "/users/password").permitAll() // 이메일 검증
+                        .requestMatchers("/api/users/check-email", "/api/users/password").permitAll() // 이메일 검증
                         .anyRequest().authenticated();
                 }
             )
