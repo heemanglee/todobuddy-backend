@@ -1,6 +1,8 @@
 package com.todobuddy.backend.entity;
 
+import com.todobuddy.backend.common.BooleanToIntegerConverter;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -12,11 +14,13 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
 
 @Entity
 @Table(name = "users")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@SQLDelete(sql = "UPDATE users SET deleted = 1 WHERE user_id = ?")
 public class User extends BaseEntity {
 
     @Id
@@ -43,6 +47,10 @@ public class User extends BaseEntity {
         this.password = password;
         this.nickName = nickName;
     }
+
+    @Convert(converter = BooleanToIntegerConverter.class)
+    @Column(name = "deleted", nullable = false)
+    private boolean deleted = false;
 
     public void updatePassword(String encodedPassword) {
         this.password = encodedPassword;

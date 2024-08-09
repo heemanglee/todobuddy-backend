@@ -23,6 +23,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -119,6 +120,18 @@ public class UserController {
     @PatchMapping("/password")
     public Response<Void> changePassword(@Valid @RequestBody ChangePasswordRequest request) {
         userService.changePassword(request);
+        return Response.of(HttpStatus.NO_CONTENT, null);
+    }
+
+    @Operation(summary = "사용자 삭제", description = "사용자 삭제 API")
+    @ApiResponses(
+        value = {
+            @ApiResponse(responseCode = "204", description = "사용자 삭제 성공")
+        }
+    )
+    @DeleteMapping
+    public Response<Void> deleteUser(@CurrentUser User user) {
+        userService.deleteUser(user);
         return Response.of(HttpStatus.NO_CONTENT, null);
     }
 }

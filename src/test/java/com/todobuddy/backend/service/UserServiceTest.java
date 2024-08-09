@@ -13,16 +13,19 @@ import com.todobuddy.backend.dto.CreateUserResponse;
 import com.todobuddy.backend.dto.EmailVerifyRequest;
 import com.todobuddy.backend.dto.LoginRequest;
 import com.todobuddy.backend.dto.LoginResponse;
+import com.todobuddy.backend.entity.Category;
 import com.todobuddy.backend.entity.User;
 import com.todobuddy.backend.entity.VerificationCode;
 import com.todobuddy.backend.exception.common.NotSameVerificationException;
 import com.todobuddy.backend.exception.user.DuplicateEmailException;
 import com.todobuddy.backend.exception.user.UserErrorCode;
 import com.todobuddy.backend.exception.user.UserNotFoundException;
+import com.todobuddy.backend.repository.CategoryRepository;
 import com.todobuddy.backend.repository.UserRepository;
 import com.todobuddy.backend.repository.VerificationCodeRepository;
 import com.todobuddy.backend.security.jwt.JwtTokenProvider;
 import com.todobuddy.backend.util.TestUtils;
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -45,6 +48,8 @@ class UserServiceTest {
     JwtTokenProvider jwtTokenProvider;
     @Mock
     VerificationCodeRepository verificationCodeRepository;
+    @Mock
+    CategoryRepository categoryRepository;
     @InjectMocks
     UserService userService;
 
@@ -238,5 +243,40 @@ class UserServiceTest {
 
         // then
         assertThrows(NotSameVerificationException.class, () -> userService.changePassword(request));
+    }
+
+    @Test
+    @DisplayName("사용자를 정상적으로 삭제할 수 있다.")
+    void successDeleteUserTest() {
+        // given
+        User user = TestUtils.createUser("test@test.com", "test", "test");
+
+        // when
+        userService.deleteUser(user);
+        ReflectionTestUtils.setField(user, "deleted", true);
+
+        // then
+        assertThat(user.isDeleted()).isTrue();
+    }
+
+    @Test
+    @DisplayName("계정 삭제 시에 사용자가 등록한 모든 카테고리 또한 모두 삭제한다.")
+    void deleteUserWithCategoriesTest() {
+        // given
+        User user = TestUtils.createUser("test@test.com", "test", "test");
+
+        for(int i = 1; i <= 3; i++) {
+            Category category = TestUtils.createCategory(user, "category" + i);
+            categoryRepository.save(category);
+        }
+
+        // when
+        userService.deleteUser(user);
+        ReflectionTestUtils.setField(user, "deleted", true);
+
+        // then
+        assertThat(user.isDeleted()).isTrue();
+        List<Category> remainingCategories = categoryRepository.findByUser(user);
+        assertThat(remainingCategories).isEmpty();
     }
 }

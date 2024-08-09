@@ -137,9 +137,11 @@ class CategoryServiceTest {
 
         // when
         categoryService.deleteCategory(createCategory.getId());
+        ReflectionTestUtils.setField(createCategory, "deleted", true);
 
         // then
         assertThat(categoryRepository.getCategories(user).size()).isEqualTo(0);
+        assertThat(createCategory.isDeleted()).isTrue();
     }
 
 }
