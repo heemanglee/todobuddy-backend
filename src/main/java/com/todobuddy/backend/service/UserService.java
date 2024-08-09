@@ -110,7 +110,7 @@ public class UserService {
             .toList();
 
         categoryRepository.deleteAllByIdInQuery(categoryIds); // 사용자가 작성한 모든 카테고리 삭제
-        userRepository.deleteById(user.getId()); // 사용자 삭제
+        userRepository.deleteByIdInQuery(user.getId()); // 사용자 삭제
     }
 
     private User findUserByEmail(String email) {
