@@ -1,6 +1,8 @@
 package com.todobuddy.backend.entity;
 
+import com.todobuddy.backend.common.BooleanToIntegerConverter;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -19,8 +21,8 @@ import org.hibernate.annotations.SQLRestriction;
 @Table(name = "users")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@SQLDelete(sql = " UPDATE users SET deleted = true WHERE user_id = ?")
-@SQLRestriction("deleted = false")
+@SQLDelete(sql = " UPDATE users SET deleted = 1 WHERE user_id = ?")
+@SQLRestriction("deleted = 0")
 public class User extends BaseEntity {
 
     @Id
@@ -48,6 +50,7 @@ public class User extends BaseEntity {
         this.nickName = nickName;
     }
 
+    @Convert(converter = BooleanToIntegerConverter.class)
     @Column(name = "deleted", nullable = false)
     private boolean deleted = false;
 

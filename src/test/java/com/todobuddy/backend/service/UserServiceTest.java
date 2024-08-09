@@ -239,4 +239,18 @@ class UserServiceTest {
         // then
         assertThrows(NotSameVerificationException.class, () -> userService.changePassword(request));
     }
+
+    @Test
+    @DisplayName("사용자를 정상적으로 삭제할 수 있다.")
+    void successDeleteUserTest() {
+        // given
+        User user = TestUtils.createUser("test@test.com", "test", "test");
+
+        // when
+        userService.deleteUser(user);
+        ReflectionTestUtils.setField(user, "deleted", true);
+
+        // then
+        assertThat(user.isDeleted()).isTrue();
+    }
 }

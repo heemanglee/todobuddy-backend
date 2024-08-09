@@ -98,6 +98,11 @@ public class UserService {
         verificationCodeRepository.delete(findVerificationCode);
     }
 
+    @Transactional
+    public void deleteUser(User user) {
+        userRepository.delete(user);
+    }
+
     private User findUserByEmail(String email) {
         return userRepository.findByEmail(email)
             .orElseThrow(() -> new UserNotFoundException(UserErrorCode.USER_NOT_FOUND));
