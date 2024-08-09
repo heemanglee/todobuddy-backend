@@ -15,14 +15,12 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.SQLRestriction;
 
 @Entity
 @Table(name = "users")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@SQLDelete(sql = " UPDATE users SET deleted = 1 WHERE user_id = ?")
-@SQLRestriction("deleted = 0")
+@SQLDelete(sql = "UPDATE users SET deleted = 1 WHERE user_id = ?")
 public class User extends BaseEntity {
 
     @Id
