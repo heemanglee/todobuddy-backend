@@ -12,6 +12,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -45,7 +46,7 @@ public class User extends BaseEntity {
     private Role role = Role.USER;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
-    List<Category> categories;
+    List<Category> categories = new ArrayList<>();
 
     @Builder
     public User(String email, String password, String nickName) {

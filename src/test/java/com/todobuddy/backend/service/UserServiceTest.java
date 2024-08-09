@@ -13,6 +13,7 @@ import com.todobuddy.backend.dto.CreateUserResponse;
 import com.todobuddy.backend.dto.EmailVerifyRequest;
 import com.todobuddy.backend.dto.LoginRequest;
 import com.todobuddy.backend.dto.LoginResponse;
+import com.todobuddy.backend.entity.Category;
 import com.todobuddy.backend.entity.User;
 import com.todobuddy.backend.entity.VerificationCode;
 import com.todobuddy.backend.exception.common.NotSameVerificationException;
@@ -252,5 +253,32 @@ class UserServiceTest {
 
         // then
         assertThat(user.isDeleted()).isTrue();
+    }
+
+    @Test
+    @DisplayName("계정 삭제 시에 사용자가 등록한 모든 카테고리 또한 모두 삭제한다.")
+    void deleteUserWithCategoriesTest() {
+        // given
+        User user = TestUtils.createUser("test@test.com", "test", "test");
+
+        Category category1 = TestUtils.createCategory(user, "category1");
+        Category category2 = TestUtils.createCategory(user, "category2");
+        Category category3 = TestUtils.createCategory(user, "category3");
+
+        user.getCategories().add(category1);
+        user.getCategories().add(category2);
+        user.getCategories().add(category3);
+
+        assertThat(user.getCategories().size()).isEqualTo(3);
+        assertThat(user.getCategories()).containsExactly(category1, category2, category3);
+
+        // when
+        user.getCategories().clear(); // // cascade = CascadeType.REMOVE
+        userService.deleteUser(user);
+        ReflectionTestUtils.setField(user, "deleted", true);
+
+        // then
+        assertThat(user.isDeleted()).isTrue();
+        assertThat(user.getCategories().size()).isEqualTo(0);
     }
 }
