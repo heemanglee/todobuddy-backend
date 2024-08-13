@@ -1,12 +1,13 @@
 spring:
   config:
+    import: 'aws-parameterstore:/config/todobuddy_prod/'
     activate:
       on-profile: prod
 
   datasource:
-    url: ${DB_URL}
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
+    url: ${DB.URL}
+    username: ${DB.USERNAME}
+    password: ${DB.PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
@@ -20,8 +21,8 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: ${MAIL_USERNAME}
-    password: ${MAIL_PASSWORD}
+    username: ${MAIL.USERNAME}
+    password: ${MAIL.PASSWORD}
     properties:
       mail:
         smtp:
@@ -32,10 +33,17 @@ spring:
 
   data:
     redis:
-      host: ${REDIS_HOST}
-      port: ${REDIS_PORT}
+      host: ${REDIS.HOST}
+      port: ${REDIS.PORT}
 
 jwt:
-  secret-key: ${JWT_SECRET_KEY}
-  expiration-time: ${JWT_EXPIRATION_TIME}
-  issuer: ${JWT_ISSUER}
+  secret-key: ${JWT.SECRET.KEY}
+  expiration-time: ${JWT.EXPIRATION.TIME}
+  issuer: ${JWT.ISSUER}
+
+aws:
+  paramstore:
+    enabled: true
+    prefix: /config
+    profile-separator: _
+    name: todobuddy
