@@ -5,6 +5,7 @@ import static com.todobuddy.backend.entity.QCategory.category;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.todobuddy.backend.dto.GetCategoriesResponse;
+import com.todobuddy.backend.entity.Category;
 import com.todobuddy.backend.entity.QUser;
 import com.todobuddy.backend.entity.User;
 import java.util.List;
@@ -28,5 +29,13 @@ public class CategoryCustomRepositoryImpl implements CategoryCustomRepository {
             .join(category.user, QUser.user)
             .where(QUser.user.eq(user))
             .fetch();
+    }
+
+    @Override
+    public Category existCategory(User user, String categoryName) {
+        return queryFactory
+            .selectFrom(category)
+            .where(category.user.eq(user), category.categoryName.eq(categoryName))
+            .fetchOne();
     }
 }
