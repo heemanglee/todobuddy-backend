@@ -2,6 +2,8 @@ package com.todobuddy.backend.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -41,6 +43,10 @@ public class Memo extends BaseEntity {
     @Column(name = "memo_deadline")
     private LocalDateTime memoDeadLine; // 메모 마감일
 
+    @Enumerated(value = EnumType.STRING)
+    @Column(name = "memo_status")
+    private MemoStatus memoStatus = MemoStatus.NOT_COMPLETED; // 완료 여부
+
     @Builder
     public Memo(String content, User user, Category category, String link, LocalDateTime memoDeadLine)  {
         this.content = content;
@@ -55,6 +61,10 @@ public class Memo extends BaseEntity {
         this.category = category;
         this.link = link;
         this.memoDeadLine = memoDeadLine;
+    }
+
+    public void updateMemoStatus(MemoStatus memoStatus)  {
+        this.memoStatus = memoStatus;
     }
 
 }

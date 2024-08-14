@@ -5,6 +5,8 @@ import com.todobuddy.backend.dto.CreateMemoRequest;
 import com.todobuddy.backend.dto.CreateMemoResponse;
 import com.todobuddy.backend.dto.UpdateMemoRequest;
 import com.todobuddy.backend.dto.UpdateMemoResponse;
+import com.todobuddy.backend.dto.UpdateMemoStatusRequest;
+import com.todobuddy.backend.dto.UpdateMemoStatusResponse;
 import com.todobuddy.backend.entity.User;
 import com.todobuddy.backend.security.CurrentUser;
 import com.todobuddy.backend.service.MemoService;
@@ -51,6 +53,18 @@ public class MemoController {
     public Response<UpdateMemoResponse> updateMemo(@CurrentUser User user,
         @PathVariable("memoId") Long memoId, @Valid @RequestBody UpdateMemoRequest request) {
         UpdateMemoResponse response = memoService.updateMemo(user, memoId, request);
+        return Response.of(response);
+    }
+
+    @Operation(summary = "메모 상태 변경", description = "메모 상태 변경 API")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "메모 상태 변경 성공")
+    })
+    @PatchMapping("/{memoId}/status")
+    public Response<UpdateMemoStatusResponse> updateMemoStatus(@CurrentUser User user,
+        @PathVariable("memoId") Long memoId, @Valid @RequestBody UpdateMemoStatusRequest request) {
+        UpdateMemoStatusResponse response = memoService.updateMemoStatus(user,
+            memoId, request);
         return Response.of(response);
     }
 }

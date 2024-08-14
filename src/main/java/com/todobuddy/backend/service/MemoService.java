@@ -4,13 +4,18 @@ import com.todobuddy.backend.dto.CreateMemoRequest;
 import com.todobuddy.backend.dto.CreateMemoResponse;
 import com.todobuddy.backend.dto.UpdateMemoRequest;
 import com.todobuddy.backend.dto.UpdateMemoResponse;
+import com.todobuddy.backend.dto.UpdateMemoStatusRequest;
+import com.todobuddy.backend.dto.UpdateMemoStatusResponse;
 import com.todobuddy.backend.entity.Category;
 import com.todobuddy.backend.entity.Memo;
+import com.todobuddy.backend.entity.MemoStatus;
 import com.todobuddy.backend.entity.User;
 import com.todobuddy.backend.exception.category.CategoryErrorCode;
 import com.todobuddy.backend.exception.category.CategoryNotFoundException;
+import com.todobuddy.backend.exception.memo.MemoAuthorMismatchException;
 import com.todobuddy.backend.exception.memo.MemoErrorCode;
 import com.todobuddy.backend.exception.memo.MemoNotFoundException;
+import com.todobuddy.backend.exception.memo.MemoStatusUnchangedException;
 import com.todobuddy.backend.repository.CategoryRepository;
 import com.todobuddy.backend.repository.MemoRepository;
 import lombok.RequiredArgsConstructor;
@@ -54,6 +59,31 @@ public class MemoService {
 
         return new UpdateMemoResponse(findMemo.getMemoDeadLine(), findMemo.getContent(),
             findMemo.getLink(), findCategory.getCategoryName());
+    }
+
+    @Transactional
+    public UpdateMemoStatusResponse updateMemoStatus(User user, Long memoId,
+        UpdateMemoStatusRequest request) {
+        Memo findMemo = findMemoById(memoId);
+        validationMemoAuthor(user, findMemo); // 메모 작성자가 동일한지 검증한다.
+        validationMemoStatus(request.getMemoStatus(), findMemo); // 현재 메모 상태와 요청 메모의 상태가 동일하면 안된다.
+
+        MemoStatus memoStatus = request.getMemoStatus();
+        findMemo.updateMemoStatus(memoStatus);
+
+        return new UpdateMemoStatusResponse(memoStatus.name());
+    }
+
+    private static void validationMemoStatus(MemoStatus memoStatus, Memo findMemo) {
+        if(findMemo.getMemoStatus().equals(memoStatus)){
+            throw new MemoStatusUnchangedException(MemoErrorCode.MEMO_STATUS_UNCHANGED);
+        }
+    }
+
+    private static void validationMemoAuthor(User user, Memo findMemo) {
+        if (!findMemo.getUser().getId().equals(user.getId())) {
+            throw new MemoAuthorMismatchException(MemoErrorCode.MEMO_AUTHOR_MISMATCH);
+        }
     }
 
     private Memo findMemoById(Long memoId) {

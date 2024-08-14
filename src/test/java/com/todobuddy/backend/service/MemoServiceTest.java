@@ -10,10 +10,13 @@ import com.todobuddy.backend.dto.CreateMemoRequest;
 import com.todobuddy.backend.dto.CreateMemoResponse;
 import com.todobuddy.backend.dto.UpdateMemoRequest;
 import com.todobuddy.backend.dto.UpdateMemoResponse;
+import com.todobuddy.backend.dto.UpdateMemoStatusRequest;
 import com.todobuddy.backend.entity.Category;
 import com.todobuddy.backend.entity.Memo;
+import com.todobuddy.backend.entity.MemoStatus;
 import com.todobuddy.backend.entity.User;
 import com.todobuddy.backend.exception.category.CategoryNotFoundException;
+import com.todobuddy.backend.exception.memo.MemoStatusUnchangedException;
 import com.todobuddy.backend.repository.CategoryRepository;
 import com.todobuddy.backend.repository.MemoRepository;
 import com.todobuddy.backend.util.TestUtils;
@@ -45,7 +48,9 @@ public class MemoServiceTest {
     @BeforeEach
     void setUp() {
         user = TestUtils.createUser("test@test.com", "test", "test");
+        ReflectionTestUtils.setField(user, "id", 1L);
         category = TestUtils.createCategory(user, "토익");
+        ReflectionTestUtils.setField(category, "id", 1L);
     }
 
     @Test
@@ -220,6 +225,39 @@ public class MemoServiceTest {
         assertThat(result.getCategoryName()).isNotEqualTo(category.getCategoryName());
         assertThat(result.getMemoContent()).isEqualTo(memo.getContent());
         assertThat(result.getMemoContent()).isNotEqualTo(content);
+    }
+
+    @Test
+    @DisplayName("메모의 상태(미완료/완료) 상태를 변경할 수 있다.")
+    void updateMemoStatusTest() {
+        // given
+        Memo memo = TestUtils.createMemo(user, category, "토익", null, null);
+        when(memoRepository.findById(any())).thenReturn(Optional.of(memo));
+
+        // when
+        UpdateMemoStatusRequest request = new UpdateMemoStatusRequest();
+        ReflectionTestUtils.setField(request, "memoStatus", MemoStatus.COMPLETED);
+
+        memoService.updateMemoStatus(user, memo.getId(), request);
+
+        // then
+        assertThat(memo.getMemoStatus()).isEqualTo(MemoStatus.COMPLETED);
+    }
+
+    @Test
+    @DisplayName("동일한 메모 상태로 변경할 수 없다.")
+    void exceptionUpdateSameMemoStats() {
+        // given
+        Memo memo = TestUtils.createMemo(user, category, "토익", null, null);
+        when(memoRepository.findById(any())).thenReturn(Optional.of(memo));
+
+        // when
+        UpdateMemoStatusRequest request = new UpdateMemoStatusRequest();
+        ReflectionTestUtils.setField(request, "memoStatus", MemoStatus.NOT_COMPLETED);
+
+        // then
+        assertThrows(MemoStatusUnchangedException.class,
+            () -> memoService.updateMemoStatus(user, memo.getId(), request));
     }
 
 }
