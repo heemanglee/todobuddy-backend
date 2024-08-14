@@ -11,7 +11,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     properties:
       hibernate:
         format_sql: true
@@ -36,6 +36,6 @@ spring:
       port: 6399
 
 jwt:
-  secret-key: "test"
-  expiration-time: 1
-  issuer: "test"
+  secret-key: ${JWT_SECRET_KEY}
+  expiration-time: ${JWT_EXPIRATION_TIME}
+  issuer: ${JWT_ISSUER}

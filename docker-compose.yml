@@ -4,7 +4,10 @@ services:
   mysql:
     image: mysql:8.0
     container_name: todo-buddy-backend-db-container
-    command: --default-authentication-plugin=mysql_native_password
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --skip-character-set-client-handshake
     restart: always
     environment:
       MYSQL_DATABASE: todo-buddy-backend-db

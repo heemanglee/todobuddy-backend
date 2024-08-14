@@ -25,6 +25,7 @@ import com.todobuddy.backend.repository.UserRepository;
 import com.todobuddy.backend.repository.VerificationCodeRepository;
 import com.todobuddy.backend.security.jwt.JwtTokenProvider;
 import com.todobuddy.backend.util.TestUtils;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
@@ -93,12 +94,12 @@ class UserServiceTest {
         ReflectionTestUtils.setField(request, "nickName", nickName);
 
         User existUser = TestUtils.createUser(duplicatedEmail, encodedPassword, nickName);
-        when(userRepository.findByEmail(duplicatedEmail)).thenReturn(Optional.of(existUser));
+        when(userRepository.findUserByIdInQuery(duplicatedEmail)).thenReturn(Optional.of(existUser));
 
         assertThrows(DuplicateEmailException.class,
             () -> userService.createUser(request)); // 중복된 이메일로 가입 시도 -> 예외 발생
 
-        verify(userRepository).findByEmail(duplicatedEmail); // 호출 여부 확인
+        verify(userRepository).findUserByIdInQuery(duplicatedEmail); // 호출 여부 확인
     }
 
     @Test
@@ -253,10 +254,10 @@ class UserServiceTest {
 
         // when
         userService.deleteUser(user);
-        ReflectionTestUtils.setField(user, "deleted", true);
+        ReflectionTestUtils.setField(user, "deletedTime", LocalDateTime.now());
 
         // then
-        assertThat(user.isDeleted()).isTrue();
+        assertThat(user.getDeletedTime()).isNotNull();
     }
 
     @Test
@@ -272,10 +273,10 @@ class UserServiceTest {
 
         // when
         userService.deleteUser(user);
-        ReflectionTestUtils.setField(user, "deleted", true);
+        ReflectionTestUtils.setField(user, "deletedTime", LocalDateTime.now());
 
         // then
-        assertThat(user.isDeleted()).isTrue();
+        assertThat(user.getDeletedTime()).isNotNull();
         List<Category> remainingCategories = categoryRepository.findByUser(user);
         assertThat(remainingCategories).isEmpty();
     }
