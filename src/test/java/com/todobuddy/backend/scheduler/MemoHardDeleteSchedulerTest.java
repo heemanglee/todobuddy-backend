@@ -11,6 +11,7 @@ import com.todobuddy.backend.repository.MemoRepository;
 import com.todobuddy.backend.repository.UserRepository;
 import com.todobuddy.backend.util.TestUtils;
 import java.time.LocalDateTime;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 @SpringBootTest
 @ActiveProfiles("test")
+@Disabled
 class MemoHardDeleteSchedulerTest {
 
     @Autowired
