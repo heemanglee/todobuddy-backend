@@ -3,6 +3,8 @@ package com.todobuddy.backend.controller;
 import com.todobuddy.backend.common.Response;
 import com.todobuddy.backend.dto.CreateMemoRequest;
 import com.todobuddy.backend.dto.CreateMemoResponse;
+import com.todobuddy.backend.dto.UpdateMemoRequest;
+import com.todobuddy.backend.dto.UpdateMemoResponse;
 import com.todobuddy.backend.entity.User;
 import com.todobuddy.backend.security.CurrentUser;
 import com.todobuddy.backend.service.MemoService;
@@ -14,6 +16,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,5 +41,16 @@ public class MemoController {
         @Valid @RequestBody CreateMemoRequest request) {
         CreateMemoResponse response = memoService.createMemo(user, request);
         return Response.of(HttpStatus.CREATED, response);
+    }
+
+    @Operation(summary = "메모 수정", description = "메모 수정 API")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "메모 수정 성공")
+    })
+    @PatchMapping("/{memoId}")
+    public Response<UpdateMemoResponse> updateMemo(@CurrentUser User user,
+        @PathVariable("memoId") Long memoId, @Valid @RequestBody UpdateMemoRequest request) {
+        UpdateMemoResponse response = memoService.updateMemo(user, memoId, request);
+        return Response.of(response);
     }
 }

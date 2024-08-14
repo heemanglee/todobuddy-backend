@@ -1,11 +1,14 @@
 package com.todobuddy.backend.common;
 
 import com.todobuddy.backend.exception.category.CategoryErrorCode;
+import com.todobuddy.backend.exception.category.CategoryNotFoundException;
 import com.todobuddy.backend.exception.category.MaxCategoriesExceededException;
 import com.todobuddy.backend.exception.common.CommonErrorCode;
 import com.todobuddy.backend.exception.common.EmailSendFailedException;
 import com.todobuddy.backend.exception.common.ErrorCode;
 import com.todobuddy.backend.exception.common.NotSameVerificationException;
+import com.todobuddy.backend.exception.memo.MemoErrorCode;
+import com.todobuddy.backend.exception.memo.MemoNotFoundException;
 import com.todobuddy.backend.exception.user.DuplicateEmailException;
 import com.todobuddy.backend.exception.user.UserErrorCode;
 import com.todobuddy.backend.exception.user.UserNotFoundException;
@@ -57,6 +60,18 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Object> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         ErrorCode errorCode = CommonErrorCode.ARGUMENT_VALIDATION_FAILED;
+        return handleException(errorCode);
+    }
+
+    @ExceptionHandler(MemoNotFoundException.class)
+    public ResponseEntity<Object> handleMemoNotFoundException(MemoNotFoundException e) {
+        ErrorCode errorCode = MemoErrorCode.MEMO_NOT_FOUND;
+        return handleException(errorCode);
+    }
+
+    @ExceptionHandler(CategoryNotFoundException.class)
+    public ResponseEntity<Object> handleCategoryNotFoundException(CategoryNotFoundException e) {
+        ErrorCode errorCode = CategoryErrorCode.CATEGORY_NOT_FOUND;
         return handleException(errorCode);
     }
 

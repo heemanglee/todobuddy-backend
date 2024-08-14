@@ -50,4 +50,11 @@ public class Memo extends BaseEntity {
         this.memoDeadLine = memoDeadLine;
     }
 
+    public void updateMemo(String content, Category category, String link, LocalDateTime memoDeadLine) {
+        this.content = content;
+        this.category = category;
+        this.link = link;
+        this.memoDeadLine = memoDeadLine;
+    }
+
 }
