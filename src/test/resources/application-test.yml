@@ -1,7 +1,7 @@
 spring:
   config:
     activate:
-      on-profile: local
+      on-profile: test
 
   datasource:
     url: jdbc:mysql://localhost:3309/todo-buddy-backend-db?serverTimezone=UTC&characterEncoding=UTF-8
@@ -15,13 +15,12 @@ spring:
     properties:
       hibernate:
         format_sql: true
-        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
 
   mail:
     host: smtp.gmail.com
     port: 587
-    username: ${MAIL_USERNAME}
-    password: ${MAIL_PASSWORD}
+    username: "test"
+    password: "test"
     properties:
       mail:
         smtp:
@@ -39,15 +38,3 @@ jwt:
   secret-key: ${JWT_SECRET_KEY}
   expiration-time: ${JWT_EXPIRATION_TIME}
   issuer: ${JWT_ISSUER}
-
-springdoc:
-  api-docs:
-    path: /api-docs
-  default-consumes-media-type: application/json;charset=UTF-8
-  default-produces-media-type: application/json;charset=UTF-8
-  swagger-ui:
-    operations-sorter: alpha
-    tags-sorter: alpha
-    path: /swagger-ui.html
-    disable-swagger-default-url: true
-    doc-expansion: none
