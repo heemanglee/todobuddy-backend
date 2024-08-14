@@ -18,6 +18,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -67,4 +68,15 @@ public class MemoController {
             memoId, request);
         return Response.of(response);
     }
+
+    @Operation(summary = "메모 삭제(복구)", description = "메모를 휴지통으로 이동하거나, 휴지통에서 복구하는 API")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "204", description = "메모 삭제(복구) 성공")
+    })
+    @DeleteMapping("/{memoId}")
+    public Response<Void> deleteMemo(@CurrentUser User user, @PathVariable("memoId") Long memoId) {
+        memoService.deleteMemo(user, memoId);
+        return Response.of(HttpStatus.NO_CONTENT, null);
+    }
+
 }
