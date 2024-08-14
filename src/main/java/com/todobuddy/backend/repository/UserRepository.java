@@ -10,8 +10,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByEmail(String email);
 
-    @Modifying(clearAutomatically = true)
-    @Query("UPDATE User u SET u.deleted = 1 WHERE u.id = :userId")
-    void deleteByIdInQuery(Long userId);
+    @Query(value = "SELECT u.* FROM users u WHERE u.email = :email", nativeQuery = true)
+    Optional<User> findUserByIdInQuery(String email);
 
 }
