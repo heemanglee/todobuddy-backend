@@ -30,11 +30,12 @@ public class MemoService {
             .content(request.getContent())
             .user(user)
             .link(request.getMemoLink())
+            .memoDeadLine(request.getMemoDeadLine())
             .build();
         Memo savedMemo = memoRepository.save(memo);
 
         return new CreateMemoResponse(savedMemo.getId(), savedMemo.getContent(),
-            savedMemo.getLink());
+            savedMemo.getLink(), savedMemo.getMemoDeadLine());
     }
 
     private Category validationExistCategory(User user, String categoryName) {

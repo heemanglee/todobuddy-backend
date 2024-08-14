@@ -3,6 +3,7 @@ package com.todobuddy.backend.util;
 import com.todobuddy.backend.entity.Category;
 import com.todobuddy.backend.entity.Memo;
 import com.todobuddy.backend.entity.User;
+import java.time.LocalDateTime;
 
 public class TestUtils {
 
@@ -21,12 +22,13 @@ public class TestUtils {
             .build();
     }
 
-    public static Memo createMemo(User user, Category category, String content, String link) {
+    public static Memo createMemo(User user, Category category, String content, String link, LocalDateTime memoDeadLine) {
         return Memo.builder()
             .content(content)
             .user(user)
             .category(category)
             .link(link)
+            .memoDeadLine(memoDeadLine)
             .build();
     }
 }

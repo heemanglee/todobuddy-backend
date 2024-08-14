@@ -15,6 +15,7 @@ import com.todobuddy.backend.exception.category.CategoryNotFoundException;
 import com.todobuddy.backend.repository.CategoryRepository;
 import com.todobuddy.backend.repository.MemoRepository;
 import com.todobuddy.backend.util.TestUtils;
+import java.time.LocalDateTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -41,12 +42,13 @@ public class MemoServiceTest {
         final String categoryName = "토익";
         final String memoLink = null;
         final String content = "토익 공부하기";
+        final LocalDateTime deadLine = LocalDateTime.now();
 
         User user = TestUtils.createUser("test@test.com", "test", "test");
         Category category = TestUtils.createCategory(user, categoryName);
         when(categoryRepository.existCategory(user, categoryName)).thenReturn(category);
 
-        Memo memo = TestUtils.createMemo(user, category, content, memoLink);
+        Memo memo = TestUtils.createMemo(user, category, content, memoLink, deadLine);
         when(memoRepository.save(any())).thenReturn(memo);
 
         // when
@@ -61,6 +63,7 @@ public class MemoServiceTest {
         assertThat(result.getMemoId()).isEqualTo(memo.getId());
         assertThat(result.getMemoLink()).isNull();
         assertThat(result.getMemoContent()).isEqualTo(content);
+        assertThat(result.getMemoDeadLine()).isEqualTo(deadLine);
     }
 
     @Test
@@ -70,12 +73,13 @@ public class MemoServiceTest {
         final String categoryName = "토익";
         final String memoLink = "https://www.todobuddy.com";
         final String content = "토익 공부하기";
+        final LocalDateTime deadLine = LocalDateTime.now();
 
         User user = TestUtils.createUser("test@test.com", "test", "test");
         Category category = TestUtils.createCategory(user, categoryName);
         when(categoryRepository.existCategory(user, categoryName)).thenReturn(category);
 
-        Memo memo = TestUtils.createMemo(user, category, content, memoLink);
+        Memo memo = TestUtils.createMemo(user, category, content, memoLink, deadLine);
         when(memoRepository.save(any())).thenReturn(memo);
 
         // when
@@ -112,5 +116,70 @@ public class MemoServiceTest {
         // then
         assertThrows(CategoryNotFoundException.class,
             () -> memoService.createMemo(user, request));
+    }
+
+    @Test
+    @DisplayName("마감 일정이 없는 메모를 생성할 수 있다.")
+    void createMemoNullableDeadLineTest() {
+        // given
+        final String categoryName = "토익";
+        final String memoLink = "https://www.todobuddy.com";
+        final String content = "토익 공부하기";
+        final LocalDateTime deadLine = null;
+
+        User user = TestUtils.createUser("test@test.com", "test", "test");
+        Category category = TestUtils.createCategory(user, "토익");
+        Memo memo = TestUtils.createMemo(user, category, content, memoLink, deadLine);
+
+        when(categoryRepository.existCategory(user, categoryName)).thenReturn(category);
+        when(memoRepository.save(any())).thenReturn(memo);
+
+        // when
+        CreateMemoRequest request = new CreateMemoRequest();
+        ReflectionTestUtils.setField(request, "content", content);
+        ReflectionTestUtils.setField(request, "categoryName", "토익");
+        ReflectionTestUtils.setField(request, "memoLink", memoLink);
+        ReflectionTestUtils.setField(request, "memoDeadLine", deadLine);
+
+        CreateMemoResponse result = memoService.createMemo(user, request);
+
+        // then
+        assertThat(result.getMemoId()).isEqualTo(memo.getId());
+        assertThat(result.getMemoLink()).isEqualTo(memoLink);
+        assertThat(result.getMemoContent()).isEqualTo(content);
+        assertThat(result.getMemoDeadLine()).isNull();
+    }
+
+    @Test
+    @DisplayName("마감 일정이 존재하는 메모를 생성할 수 있다.")
+    void createMemoContainDeadLineTest() {
+        // given
+        final String categoryName = "토익";
+        final String memoLink = "https://www.todobuddy.com";
+        final String content = "토익 공부하기";
+        final LocalDateTime deadLine = LocalDateTime.now();
+
+        User user = TestUtils.createUser("test@test.com", "test", "test");
+        Category category = TestUtils.createCategory(user, "토익");
+        Memo memo = TestUtils.createMemo(user, category, content, memoLink, deadLine);
+
+        when(categoryRepository.existCategory(user, categoryName)).thenReturn(category);
+        when(memoRepository.save(any())).thenReturn(memo);
+
+        // when
+        CreateMemoRequest request = new CreateMemoRequest();
+        ReflectionTestUtils.setField(request, "content", content);
+        ReflectionTestUtils.setField(request, "categoryName", "토익");
+        ReflectionTestUtils.setField(request, "memoLink", memoLink);
+        ReflectionTestUtils.setField(request, "memoDeadLine", deadLine);
+
+        CreateMemoResponse result = memoService.createMemo(user, request);
+
+        // then
+        assertThat(result.getMemoId()).isEqualTo(memo.getId());
+        assertThat(result.getMemoLink()).isEqualTo(memoLink);
+        assertThat(result.getMemoContent()).isEqualTo(content);
+        assertThat(result.getMemoDeadLine()).isNotNull();
+        assertThat(result.getMemoDeadLine()).isEqualTo(deadLine);
     }
 }

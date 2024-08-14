@@ -2,11 +2,12 @@ package com.todobuddy.backend.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
+import java.time.LocalDateTime;
 import lombok.Getter;
 import org.springframework.lang.Nullable;
 
 @Getter
-@Schema(description = "메모 작성 Requset DTO")
+@Schema(description = "메모 작성 Request DTO")
 public class CreateMemoRequest {
 
     @NotBlank(message = "메모 제목은 필수 입력 값입니다.")
@@ -20,4 +21,8 @@ public class CreateMemoRequest {
     @Nullable
     @Schema(description = "링크", example = "https://www.todobuddy.com")
     private String memoLink;
+
+    @Nullable
+    @Schema(description = "마감 기한", example = "2024-08-14T14:40:00")
+    private LocalDateTime memoDeadLine;
 }

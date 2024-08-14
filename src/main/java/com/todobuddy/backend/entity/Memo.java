@@ -8,6 +8,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -37,12 +38,16 @@ public class Memo extends BaseEntity {
     @Column(name = "memo_link")
     private String link; // 메모 링크
 
+    @Column(name = "memo_deadline")
+    private LocalDateTime memoDeadLine; // 메모 마감일
+
     @Builder
-    public Memo(String content, User user, Category category, String link)  {
+    public Memo(String content, User user, Category category, String link, LocalDateTime memoDeadLine)  {
         this.content = content;
         this.user = user;
         this.category = category;
         this.link = link;
+        this.memoDeadLine = memoDeadLine;
     }
 
 }
