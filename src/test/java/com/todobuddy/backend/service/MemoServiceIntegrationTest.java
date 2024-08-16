@@ -2,7 +2,6 @@ package com.todobuddy.backend.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.todobuddy.backend.TestContainerSupport;
 import com.todobuddy.backend.dto.GetMemosRequest;
 import com.todobuddy.backend.dto.GetMemosResponse;
 import com.todobuddy.backend.entity.Category;
@@ -15,7 +14,6 @@ import com.todobuddy.backend.util.TestUtils;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 @SpringBootTest
 @Transactional
 @ActiveProfiles("test")
-@Disabled
-public class MemoServiceIntegrationTest extends TestContainerSupport {
+public class MemoServiceIntegrationTest {
 
     @Autowired
     MemoRepository memoRepository;
@@ -96,7 +93,7 @@ public class MemoServiceIntegrationTest extends TestContainerSupport {
 
         assertThat(result.get(2).getMemoContent()).isEqualTo(memo3.getContent());
         assertThat(result.get(2).getMemoLink()).isEqualTo(memo3.getLink());
-        assertThat(result.get(2).getMemoDeadLine()).isEqualTo(memo3.getMemoDeadLine());
+        assertThat(result.get(2).getMemoDeadLine().withNano(0)).isEqualTo(memo3.getMemoDeadLine().withNano(0));
         assertThat(result.get(2).getCategoryName()).isEqualTo(
             memo3.getCategory().getCategoryName());
 
