@@ -25,4 +25,7 @@ public class GetMemosResponse {
 
     @Schema(description = "메모 마감 일정", example = "2024-08-16T23:59:59")
     private LocalDateTime memoDeadLine;
+
+    @Schema(description = "메모 생성 일자", example = "2024-08-16T23:59:59")
+    private LocalDateTime memoCreatedDate;
 }
