@@ -35,10 +35,6 @@ jobs:
           JWT_EXPIRATION_TIME: ${{ secrets.JWT_EXPIRATION_TIME }}
           JWT_ISSUER: ${{ secrets.JWT_ISSUER }}
 
-      - name: 테스트 로그 출력
-        if: failure()
-        run: cat build/reports/tests/test/index.html
-
       - name: 테스트 결과 아티팩트로 저장
         if: failure()
         uses: actions/upload-artifact@v3
