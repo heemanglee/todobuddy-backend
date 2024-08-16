@@ -27,8 +27,8 @@ import org.springframework.transaction.annotation.Transactional;
 @SpringBootTest
 @Transactional
 @ActiveProfiles("test")
-@Disabled
-public class MemoServiceIntegrationTest extends TestContainerSupport {
+//@Disabled
+public class MemoServiceIntegrationTest {
 
     @Autowired
     MemoRepository memoRepository;
