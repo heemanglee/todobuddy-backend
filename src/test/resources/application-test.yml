@@ -4,14 +4,14 @@ spring:
       on-profile: test
 
   datasource:
-    url: jdbc:mysql://localhost:3309/todo-buddy-backend-db?serverTimezone=UTC&characterEncoding=UTF-8
-    username: dev
-    password: 1234
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:tc:mysql:8.0.33:///test
+    username: test
+    password: test
+    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
 
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
     properties:
       hibernate:
         format_sql: true

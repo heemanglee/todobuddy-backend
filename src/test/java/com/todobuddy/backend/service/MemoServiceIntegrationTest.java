@@ -2,6 +2,7 @@ package com.todobuddy.backend.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.todobuddy.backend.TestContainerSupport;
 import com.todobuddy.backend.dto.GetMemosRequest;
 import com.todobuddy.backend.dto.GetMemosResponse;
 import com.todobuddy.backend.entity.Category;
@@ -21,10 +22,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
+
 @SpringBootTest
 @Transactional
 @ActiveProfiles("test")
-public class MemoServiceIntegrationTest {
+public class MemoServiceIntegrationTest extends TestContainerSupport {
 
     @Autowired
     MemoRepository memoRepository;
