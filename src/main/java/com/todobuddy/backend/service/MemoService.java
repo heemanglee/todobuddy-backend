@@ -2,6 +2,8 @@ package com.todobuddy.backend.service;
 
 import com.todobuddy.backend.dto.CreateMemoRequest;
 import com.todobuddy.backend.dto.CreateMemoResponse;
+import com.todobuddy.backend.dto.GetMemosRequest;
+import com.todobuddy.backend.dto.GetMemosResponse;
 import com.todobuddy.backend.dto.UpdateMemoRequest;
 import com.todobuddy.backend.dto.UpdateMemoResponse;
 import com.todobuddy.backend.dto.UpdateMemoStatusRequest;
@@ -18,6 +20,7 @@ import com.todobuddy.backend.exception.memo.MemoNotFoundException;
 import com.todobuddy.backend.exception.memo.MemoStatusUnchangedException;
 import com.todobuddy.backend.repository.CategoryRepository;
 import com.todobuddy.backend.repository.MemoRepository;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -86,6 +89,12 @@ public class MemoService {
         }
 
         memoRepository.deleteById(memoId);
+    }
+
+    @Transactional
+    public List<GetMemosResponse> getMemoAll(User user, GetMemosRequest request) {
+        return memoRepository.findMemosByYearAndMonth(user,
+            request.getYear(), request.getMonth());
     }
 
     private Memo findMemoByIdInQuery(Long memoId) {

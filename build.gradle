@@ -63,6 +63,11 @@ dependencies {
     //AWS Parameter Store
     implementation platform("io.awspring.cloud:spring-cloud-aws-dependencies:3.1.0")
     implementation 'io.awspring.cloud:spring-cloud-aws-starter-parameter-store'
+
+    // Testcontainers
+    testImplementation 'org.testcontainers:testcontainers:1.20.1'
+    testImplementation 'org.testcontainers:junit-jupiter:1.20.1'
+    testImplementation 'org.testcontainers:mysql:1.19.0'
 }
 
 tasks.named('test') {

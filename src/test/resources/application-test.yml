@@ -4,10 +4,10 @@ spring:
       on-profile: test
 
   datasource:
-    url: jdbc:mysql://localhost:3309/todo-buddy-backend-db?serverTimezone=UTC&characterEncoding=UTF-8
-    username: dev
-    password: 1234
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:tc:mysql:8.0.33:///test
+    username: test
+    password: test
+    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
 
   jpa:
     hibernate:
@@ -35,6 +35,6 @@ spring:
       port: 6399
 
 jwt:
-  secret-key: ${JWT_SECRET_KEY}
-  expiration-time: ${JWT_EXPIRATION_TIME}
-  issuer: ${JWT_ISSUER}
+  secret-key: "1111111111111111111111111111111111111111111111111111111111111"
+  expiration-time: 1
+  issuer: "11"
