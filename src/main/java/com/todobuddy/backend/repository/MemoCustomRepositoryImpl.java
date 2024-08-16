@@ -24,7 +24,8 @@ public class MemoCustomRepositoryImpl implements MemoCustomRepository{
                     memo.category.categoryOrder,
                     memo.content,
                     memo.link,
-                    memo.memoDeadLine
+                    memo.memoDeadLine,
+                    memo.createdDate
                 )
             )
             .from(memo)
