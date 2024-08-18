@@ -16,5 +16,5 @@ public class GetCategoriesResponse {
     private String categoryName;
 
     @Schema(description = "카테고리 순서", example = "1 (1부터 시작)")
-    private int categoryOder;
+    private int categoryOrder;
 }

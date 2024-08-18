@@ -1,7 +1,7 @@
 package com.todobuddy.backend.service;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -19,7 +19,6 @@ import com.todobuddy.backend.util.TestUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -104,13 +103,13 @@ class CategoryServiceTest {
         // then
         assertThat(response.size()).isEqualTo(3);
         assertThat(response.get(0).getCategoryName()).isEqualTo("category1");
-        assertThat(response.get(0).getCategoryOder()).isEqualTo(1);
+        assertThat(response.get(0).getCategoryOrder()).isEqualTo(1);
 
         assertThat(response.get(1).getCategoryName()).isEqualTo("category2");
-        assertThat(response.get(1).getCategoryOder()).isEqualTo(2);
+        assertThat(response.get(1).getCategoryOrder()).isEqualTo(2);
 
         assertThat(response.get(2).getCategoryName()).isEqualTo("category3");
-        assertThat(response.get(2).getCategoryOder()).isEqualTo(3);
+        assertThat(response.get(2).getCategoryOrder()).isEqualTo(3);
     }
 
     @Test
