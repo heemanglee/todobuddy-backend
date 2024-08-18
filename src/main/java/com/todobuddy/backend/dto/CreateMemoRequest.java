@@ -12,7 +12,7 @@ public class CreateMemoRequest {
 
     @NotBlank(message = "메모 제목은 필수 입력 값입니다.")
     @Schema(description = "메모 내용", example = "토익 공부하기")
-    private String content;
+    private String memoContent;
 
     @NotBlank(message = "카테고리 입력은 필수 값입니다.")
     @Schema(description = "카테고리 이름", example = "토익")

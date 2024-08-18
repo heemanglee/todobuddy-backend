@@ -69,7 +69,7 @@ public class MemoServiceTest {
 
         // when
         CreateMemoRequest request = new CreateMemoRequest();
-        ReflectionTestUtils.setField(request, "content", content);
+        ReflectionTestUtils.setField(request, "memoContent", content);
         ReflectionTestUtils.setField(request, "categoryName", category.getCategoryName());
         ReflectionTestUtils.setField(request, "memoLink", memoLink);
 
@@ -98,7 +98,7 @@ public class MemoServiceTest {
 
         // when
         CreateMemoRequest request = new CreateMemoRequest();
-        ReflectionTestUtils.setField(request, "content", content);
+        ReflectionTestUtils.setField(request, "memoContent", content);
         ReflectionTestUtils.setField(request, "categoryName", category.getCategoryName());
         ReflectionTestUtils.setField(request, "memoLink", memoLink);
 
@@ -121,7 +121,7 @@ public class MemoServiceTest {
 
         // when
         CreateMemoRequest request = new CreateMemoRequest();
-        ReflectionTestUtils.setField(request, "content", content);
+        ReflectionTestUtils.setField(request, "memoContent", content);
         ReflectionTestUtils.setField(request, "categoryName", "토익");
         ReflectionTestUtils.setField(request, "memoLink", memoLink);
 
@@ -146,7 +146,7 @@ public class MemoServiceTest {
 
         // when
         CreateMemoRequest request = new CreateMemoRequest();
-        ReflectionTestUtils.setField(request, "content", content);
+        ReflectionTestUtils.setField(request, "memoContent", content);
         ReflectionTestUtils.setField(request, "categoryName", "토익");
         ReflectionTestUtils.setField(request, "memoLink", memoLink);
         ReflectionTestUtils.setField(request, "memoDeadLine", deadLine);
@@ -176,7 +176,7 @@ public class MemoServiceTest {
 
         // when
         CreateMemoRequest request = new CreateMemoRequest();
-        ReflectionTestUtils.setField(request, "content", content);
+        ReflectionTestUtils.setField(request, "memoContent", content);
         ReflectionTestUtils.setField(request, "categoryName", "토익");
         ReflectionTestUtils.setField(request, "memoLink", memoLink);
         ReflectionTestUtils.setField(request, "memoDeadLine", deadLine);

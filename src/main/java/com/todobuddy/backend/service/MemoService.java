@@ -41,7 +41,7 @@ public class MemoService {
 
         Memo memo = Memo.builder()
             .category(findCategory)
-            .content(request.getContent())
+            .content(request.getMemoContent())
             .user(user)
             .link(request.getMemoLink())
             .memoDeadLine(request.getMemoDeadLine())
