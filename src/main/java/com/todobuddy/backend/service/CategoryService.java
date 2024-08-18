@@ -4,6 +4,7 @@ import com.todobuddy.backend.dto.CreateCategoryRequest;
 import com.todobuddy.backend.dto.CreateCategoryResponse;
 import com.todobuddy.backend.dto.GetCategoriesResponse;
 import com.todobuddy.backend.dto.UpdateCategoryRequest;
+import com.todobuddy.backend.dto.UpdateCategoryResponse;
 import com.todobuddy.backend.entity.Category;
 import com.todobuddy.backend.entity.User;
 import com.todobuddy.backend.exception.category.CategoryErrorCode;
@@ -55,9 +56,11 @@ public class CategoryService {
 
     // 카테고리 이름 수정
     @Transactional
-    public void updateCategory(Long categoryId, UpdateCategoryRequest request) {
+    public UpdateCategoryResponse updateCategory(Long categoryId, UpdateCategoryRequest request) {
         Category findCategory = findCategoryById(categoryId);
         findCategory.updateCategoryName(request.getCategoryName());
+
+        return new UpdateCategoryResponse(findCategory.getId(), findCategory.getCategoryName());
     }
 
     private Category findCategoryById(Long categoryId) {

@@ -10,6 +10,7 @@ import com.todobuddy.backend.dto.CreateCategoryRequest;
 import com.todobuddy.backend.dto.CreateCategoryResponse;
 import com.todobuddy.backend.dto.GetCategoriesResponse;
 import com.todobuddy.backend.dto.UpdateCategoryRequest;
+import com.todobuddy.backend.dto.UpdateCategoryResponse;
 import com.todobuddy.backend.entity.Category;
 import com.todobuddy.backend.entity.User;
 import com.todobuddy.backend.exception.category.MaxCategoriesExceededException;
@@ -122,10 +123,11 @@ class CategoryServiceTest {
         // when
         UpdateCategoryRequest request = new UpdateCategoryRequest();
         ReflectionTestUtils.setField(request, "categoryName", "category2");
-        categoryService.updateCategory(createCategory.getId(), request);
+        UpdateCategoryResponse response = categoryService.updateCategory(createCategory.getId(),
+            request);
 
         // then
-        assertThat(createCategory.getCategoryName()).isEqualTo("category2");
+        assertThat(response.getCategoryName()).isEqualTo("category2");
     }
 
     @Test

@@ -5,6 +5,7 @@ import com.todobuddy.backend.dto.CreateCategoryRequest;
 import com.todobuddy.backend.dto.CreateCategoryResponse;
 import com.todobuddy.backend.dto.GetCategoriesResponse;
 import com.todobuddy.backend.dto.UpdateCategoryRequest;
+import com.todobuddy.backend.dto.UpdateCategoryResponse;
 import com.todobuddy.backend.entity.User;
 import com.todobuddy.backend.security.CurrentUser;
 import com.todobuddy.backend.service.CategoryService;
@@ -67,10 +68,11 @@ public class CategoryController {
         }
     )
     @PatchMapping("/{categoryId}")
-    public Response<Void> updateCategory(@Valid @RequestBody UpdateCategoryRequest request,
+    public Response<UpdateCategoryResponse> updateCategory(@Valid @RequestBody UpdateCategoryRequest request,
         @PathVariable Long categoryId) {
-        categoryService.updateCategory(categoryId, request);
-        return Response.of(HttpStatus.NO_CONTENT, null);
+        UpdateCategoryResponse response = categoryService.updateCategory(categoryId,
+            request);
+        return Response.of(HttpStatus.OK, response);
     }
 
     @Operation(summary = "카테고리 삭제", description = "카테고리 삭제 API")
