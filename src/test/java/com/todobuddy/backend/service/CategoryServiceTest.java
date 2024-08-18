@@ -41,10 +41,12 @@ class CategoryServiceTest {
     void successCreateCategoryTest() {
         // given
         User user = TestUtils.createUser("test@test.com", "test", "test");
+        String categoryName = "토익";
+        Category category = TestUtils.createCategory(user, categoryName);
 
         when(categoryRepository.countByUser(user)).thenReturn(2L);
+        when(categoryRepository.save(any())).thenReturn(category);
 
-        String categoryName = "토익";
 
         // then
         CreateCategoryRequest request = new CreateCategoryRequest();

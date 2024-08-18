@@ -11,7 +11,7 @@ import org.springframework.lang.Nullable;
 public class UpdateMemoRequest {
 
     @Nullable
-    @Schema(description = "메모 마감일", example = "2024-08-14T14:40:00")
+    @Schema(description = "메모 마감일", example = "2024-08-14T00:00:00")
     private LocalDateTime memoDeadLine;
 
     @NotBlank
