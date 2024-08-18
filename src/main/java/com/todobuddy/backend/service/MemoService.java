@@ -74,7 +74,7 @@ public class MemoService {
         MemoStatus memoStatus = request.getMemoStatus();
         findMemo.updateMemoStatus(memoStatus);
 
-        return new UpdateMemoStatusResponse(memoStatus.name());
+        return new UpdateMemoStatusResponse(findMemo.getId(), memoStatus.name());
     }
 
     @Transactional

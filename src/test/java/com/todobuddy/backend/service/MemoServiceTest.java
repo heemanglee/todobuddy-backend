@@ -228,7 +228,7 @@ public class MemoServiceTest {
     }
 
     @Test
-    @DisplayName("메모의 상태(미완료/완료) 상태를 변경할 수 있다.")
+    @DisplayName("메모의 상태(미완료/완료)를 변경할 수 있다.")
     void updateMemoStatusTest() {
         // given
         Memo memo = TestUtils.createMemo(user, category, "토익", null, null);
