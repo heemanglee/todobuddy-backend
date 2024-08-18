@@ -10,15 +10,15 @@ import lombok.Getter;
 @Schema(description = "메모 수정 Response DTO")
 public class UpdateMemoResponse {
 
-    @Schema(description = "수정된 메모 마감일", example = "2024-08-14T14:40:00")
+    @Schema(description = "수정된 메모 마감일", example = "2024-08-14T00:00:00")
     private LocalDateTime memoDeadLine;
 
-    @Schema(description = "수정된 메모 내용", example = "운동하기")
+    @Schema(description = "수정된 메모 내용", example = "토익 공부하기")
     private String memoContent;
 
     @Schema(description = "수정된 메모 링크", example = "https://www.todobuddy.com")
     private String memoLink;
 
-    @Schema(description = "수정된 카테고리 이름", example = "운동")
+    @Schema(description = "수정된 카테고리 이름", example = "토익")
     private String categoryName;
 }

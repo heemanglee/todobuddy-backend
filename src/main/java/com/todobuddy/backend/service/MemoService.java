@@ -41,7 +41,7 @@ public class MemoService {
 
         Memo memo = Memo.builder()
             .category(findCategory)
-            .content(request.getContent())
+            .content(request.getMemoContent())
             .user(user)
             .link(request.getMemoLink())
             .memoDeadLine(request.getMemoDeadLine())
@@ -74,7 +74,7 @@ public class MemoService {
         MemoStatus memoStatus = request.getMemoStatus();
         findMemo.updateMemoStatus(memoStatus);
 
-        return new UpdateMemoStatusResponse(memoStatus.name());
+        return new UpdateMemoStatusResponse(findMemo.getId(), memoStatus.name());
     }
 
     @Transactional

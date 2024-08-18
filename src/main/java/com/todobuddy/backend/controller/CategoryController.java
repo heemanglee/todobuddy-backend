@@ -2,8 +2,10 @@ package com.todobuddy.backend.controller;
 
 import com.todobuddy.backend.common.Response;
 import com.todobuddy.backend.dto.CreateCategoryRequest;
+import com.todobuddy.backend.dto.CreateCategoryResponse;
 import com.todobuddy.backend.dto.GetCategoriesResponse;
 import com.todobuddy.backend.dto.UpdateCategoryRequest;
+import com.todobuddy.backend.dto.UpdateCategoryResponse;
 import com.todobuddy.backend.entity.User;
 import com.todobuddy.backend.security.CurrentUser;
 import com.todobuddy.backend.service.CategoryService;
@@ -41,10 +43,10 @@ public class CategoryController {
         }
     )
     @PostMapping
-    public Response<Void> createCategory(@CurrentUser User user,
+    public Response<CreateCategoryResponse> createCategory(@CurrentUser User user,
         @Valid @RequestBody CreateCategoryRequest request) {
-        categoryService.createCategory(user, request);
-        return Response.of(HttpStatus.CREATED, null);
+        CreateCategoryResponse response = categoryService.createCategory(user, request);
+        return Response.of(HttpStatus.CREATED, response);
     }
 
     @Operation(summary = "카테고리 전체 조회", description = "사용자가 등록한 모든 카테고리 조회 API")
@@ -66,10 +68,11 @@ public class CategoryController {
         }
     )
     @PatchMapping("/{categoryId}")
-    public Response<Void> updateCategory(@Valid @RequestBody UpdateCategoryRequest request,
+    public Response<UpdateCategoryResponse> updateCategory(@Valid @RequestBody UpdateCategoryRequest request,
         @PathVariable Long categoryId) {
-        categoryService.updateCategory(categoryId, request);
-        return Response.of(HttpStatus.NO_CONTENT, null);
+        UpdateCategoryResponse response = categoryService.updateCategory(categoryId,
+            request);
+        return Response.of(HttpStatus.OK, response);
     }
 
     @Operation(summary = "카테고리 삭제", description = "카테고리 삭제 API")
