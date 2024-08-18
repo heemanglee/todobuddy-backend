@@ -1,6 +1,7 @@
 package com.todobuddy.backend.service;
 
 import com.todobuddy.backend.dto.CreateCategoryRequest;
+import com.todobuddy.backend.dto.CreateCategoryResponse;
 import com.todobuddy.backend.dto.GetCategoriesResponse;
 import com.todobuddy.backend.dto.UpdateCategoryRequest;
 import com.todobuddy.backend.entity.Category;
@@ -22,7 +23,7 @@ public class CategoryService {
 
     // 카테고리 등록
     @Transactional
-    public void createCategory(User user, CreateCategoryRequest request) {
+    public CreateCategoryResponse createCategory(User user, CreateCategoryRequest request) {
 
         // 사용자는 최대 3개의 카테고리를 등록할 수 있다.
         Long categoryCount = categoryRepository.countByUser(user);
@@ -33,7 +34,10 @@ public class CategoryService {
         // 카테고리 등록
         Category createCategory = createCategory(user, request.getCategoryName(),
             request.getCategoryOrder());
-        categoryRepository.save(createCategory);
+        Category savedCategory = categoryRepository.save(createCategory);
+
+        return new CreateCategoryResponse(savedCategory.getId(), savedCategory.getCategoryName(),
+            savedCategory.getCategoryOrder());
     }
 
     // 사용자가 등록한 모든 카테고리 조회

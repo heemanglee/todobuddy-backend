@@ -2,6 +2,7 @@ package com.todobuddy.backend.controller;
 
 import com.todobuddy.backend.common.Response;
 import com.todobuddy.backend.dto.CreateCategoryRequest;
+import com.todobuddy.backend.dto.CreateCategoryResponse;
 import com.todobuddy.backend.dto.GetCategoriesResponse;
 import com.todobuddy.backend.dto.UpdateCategoryRequest;
 import com.todobuddy.backend.entity.User;
@@ -41,10 +42,10 @@ public class CategoryController {
         }
     )
     @PostMapping
-    public Response<Void> createCategory(@CurrentUser User user,
+    public Response<CreateCategoryResponse> createCategory(@CurrentUser User user,
         @Valid @RequestBody CreateCategoryRequest request) {
-        categoryService.createCategory(user, request);
-        return Response.of(HttpStatus.CREATED, null);
+        CreateCategoryResponse response = categoryService.createCategory(user, request);
+        return Response.of(HttpStatus.CREATED, response);
     }
 
     @Operation(summary = "카테고리 전체 조회", description = "사용자가 등록한 모든 카테고리 조회 API")
