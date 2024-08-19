@@ -7,6 +7,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.todobuddy.backend.dto.AuthResponse;
 import com.todobuddy.backend.dto.ChangePasswordRequest;
 import com.todobuddy.backend.dto.CreateUserRequest;
 import com.todobuddy.backend.dto.CreateUserResponse;
@@ -117,7 +118,9 @@ class UserServiceTest {
         when(passwordEncoder.matches(rawPassword, encodedPassword)).thenReturn(true);
 
         String jwtToken = "jwtToken";
-        when(jwtTokenProvider.generateToken(createUser)).thenReturn(jwtToken);
+        String refreshToken = "refrestToken";
+        AuthResponse authResponse = new AuthResponse(jwtToken, refreshToken, "Bearer");
+        when(jwtTokenProvider.generateToken(createUser)).thenReturn(authResponse);
 
         // when
         LoginRequest request = new LoginRequest();
@@ -126,7 +129,7 @@ class UserServiceTest {
 
         // then
         LoginResponse response = userService.login(request);
-        assertThat(response.getAccessToken()).isEqualTo(jwtToken);
+        assertThat(response.getJwtToken()).isEqualTo(authResponse);
     }
 
     @Test

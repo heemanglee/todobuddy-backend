@@ -1,5 +1,6 @@
 package com.todobuddy.backend.service;
 
+import com.todobuddy.backend.dto.AuthResponse;
 import com.todobuddy.backend.dto.ChangePasswordRequest;
 import com.todobuddy.backend.dto.CreateUserRequest;
 import com.todobuddy.backend.dto.CreateUserResponse;
@@ -68,7 +69,7 @@ public class UserService {
             throw new IllegalArgumentException("사용자 정보가 일치하지 않습니다.");
         }
 
-        String createJwtToken = jwtTokenProvider.generateToken(findUser);
+        AuthResponse createJwtToken = jwtTokenProvider.generateToken(findUser);
         return new LoginResponse(createJwtToken);
     }
 
