@@ -2,7 +2,6 @@ package com.todobuddy.backend.service;
 
 import com.todobuddy.backend.dto.CreateMemoRequest;
 import com.todobuddy.backend.dto.CreateMemoResponse;
-import com.todobuddy.backend.dto.GetMemosRequest;
 import com.todobuddy.backend.dto.GetMemosResponse;
 import com.todobuddy.backend.dto.UpdateMemoRequest;
 import com.todobuddy.backend.dto.UpdateMemoResponse;
@@ -86,9 +85,8 @@ public class MemoService {
     }
 
     @Transactional
-    public List<GetMemosResponse> getMemoAll(User user, GetMemosRequest request) {
-        return memoRepository.findMemosByYearAndMonth(user,
-            request.getYear(), request.getMonth());
+    public List<GetMemosResponse> getMemoAll(User user, String memoStatus) {
+        return memoRepository.findMemoByFilter(user, memoStatus);
     }
 
     private Memo findMemoByIdInQuery(Long memoId) {

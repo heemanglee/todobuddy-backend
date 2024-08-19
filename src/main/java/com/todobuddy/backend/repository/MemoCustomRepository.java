@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface MemoCustomRepository {
 
-    List<GetMemosResponse> findMemosByYearAndMonth(User user, int year, int month);
+    List<GetMemosResponse> findMemoByFilter(User user, String memoStatus);
 }

@@ -2,7 +2,6 @@ package com.todobuddy.backend.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.todobuddy.backend.dto.GetMemosRequest;
 import com.todobuddy.backend.dto.GetMemosResponse;
 import com.todobuddy.backend.entity.Category;
 import com.todobuddy.backend.entity.Memo;
@@ -58,7 +57,7 @@ public class MemoServiceIntegrationTest {
     }
 
     @Test
-    @DisplayName("특정 년과 월에 작성한 모든 메모를 작성한 날짜를 기준으로 오름차순으로 조회할 수 있다.")
+    @DisplayName("사용자가 작성한 모든 메모를 조회할 수 있다.")
     void getMemosTest() {
         // given
         Memo memo1 = TestUtils.createMemo(user1, category1, "토익 공부", null, null);
@@ -73,8 +72,7 @@ public class MemoServiceIntegrationTest {
         memoRepository.save(memo4);
 
         // when
-        GetMemosRequest request = new GetMemosRequest(2024, 8);
-        List<GetMemosResponse> result = memoService.getMemoAll(user1, request);
+        List<GetMemosResponse> result = memoService.getMemoAll(user1, null);
 
         // then
         assertThat(result.size()).isEqualTo(3);
