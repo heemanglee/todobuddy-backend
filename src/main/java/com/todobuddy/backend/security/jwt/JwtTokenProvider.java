@@ -1,5 +1,6 @@
 package com.todobuddy.backend.security.jwt;
 
+import com.todobuddy.backend.dto.AuthResponse;
 import com.todobuddy.backend.entity.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -15,17 +16,20 @@ import org.springframework.stereotype.Service;
 public class JwtTokenProvider {
 
     private final String secretKey;
-    private final long expiredTime;
+    private final long accessExpiredTime;
+    private final long refreshExpiredTime;
     private final String issuer;
     private final Key key;
 
     public JwtTokenProvider(
         @Value("${jwt.secret-key}") String secretKey,
-        @Value("${jwt.expiration-time}") long expiredTime,
+        @Value("${jwt.access-token-expiration-time}") long accessExpiredTime,
+        @Value("${jwt.refresh-token-expiration-time}") long refreshExpiredTime,
         @Value("${jwt.issuer}") String issuer) {
 
         this.secretKey = secretKey;
-        this.expiredTime = expiredTime;
+        this.accessExpiredTime = accessExpiredTime;
+        this.refreshExpiredTime = refreshExpiredTime;
         this.issuer = issuer;
 
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
@@ -33,15 +37,34 @@ public class JwtTokenProvider {
     }
 
     // JWT 토큰 생성
-    public String generateToken(User user) {
-        long now = new Date().getTime();
+    public AuthResponse generateToken(User user) {
+        String accessToken = generateAccessToken(user);
+        String refreshToken = generateRefreshToken(user);
+        return new AuthResponse(accessToken, refreshToken, "Bearer");
+    }
 
+    // ACCESS TOKEN 생성
+    private String generateAccessToken(User user) {
+        long now = new Date().getTime();
         return Jwts.builder()
             .setSubject(user.getEmail())
             .claim("auth", user.getRole())
             .setIssuer(issuer)
             .setIssuedAt(new Date(now))
-            .setExpiration(new Date(now + expiredTime))
+            .setExpiration(new Date(now + accessExpiredTime))
+            .signWith(key, SignatureAlgorithm.HS256)
+            .compact();
+    }
+
+    // REFRESH TOKEN 생성
+    private String generateRefreshToken(User user) {
+        long now = new Date().getTime();
+        return Jwts.builder()
+            .setSubject(user.getEmail())
+            .claim("auth", user.getRole())
+            .setIssuer(issuer)
+            .setIssuedAt(new Date(now))
+            .setExpiration(new Date(now + refreshExpiredTime))
             .signWith(key, SignatureAlgorithm.HS256)
             .compact();
     }
