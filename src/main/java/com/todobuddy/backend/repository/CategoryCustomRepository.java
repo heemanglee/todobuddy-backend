@@ -9,5 +9,5 @@ public interface CategoryCustomRepository {
 
     List<GetCategoriesResponse> getCategories(User user);
 
-    Category existCategory(User user, String categoryName);
+    Category existCategory(User user, Long categoryId);
 }

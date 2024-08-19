@@ -2,7 +2,6 @@ package com.todobuddy.backend.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.todobuddy.backend.dto.GetMemosRequest;
 import com.todobuddy.backend.dto.GetMemosResponse;
 import com.todobuddy.backend.entity.Category;
 import com.todobuddy.backend.entity.Memo;
@@ -58,7 +57,7 @@ public class MemoServiceIntegrationTest {
     }
 
     @Test
-    @DisplayName("특정 년과 월에 작성한 모든 메모를 작성한 날짜를 기준으로 오름차순으로 조회할 수 있다.")
+    @DisplayName("사용자가 작성한 모든 메모를 조회할 수 있다.")
     void getMemosTest() {
         // given
         Memo memo1 = TestUtils.createMemo(user1, category1, "토익 공부", null, null);
@@ -73,8 +72,7 @@ public class MemoServiceIntegrationTest {
         memoRepository.save(memo4);
 
         // when
-        GetMemosRequest request = new GetMemosRequest(2024, 8);
-        List<GetMemosResponse> result = memoService.getMemoAll(user1, request);
+        List<GetMemosResponse> result = memoService.getMemoAll(user1, null);
 
         // then
         assertThat(result.size()).isEqualTo(3);
@@ -82,25 +80,23 @@ public class MemoServiceIntegrationTest {
         assertThat(result.get(0).getMemoContent()).isEqualTo(memo1.getContent());
         assertThat(result.get(0).getMemoLink()).isEqualTo(memo1.getLink());
         assertThat(result.get(0).getMemoDeadLine()).isEqualTo(memo1.getMemoDeadLine());
-        assertThat(result.get(0).getCategoryName()).isEqualTo(
-            memo1.getCategory().getCategoryName());
+        assertThat(result.get(0).getCategoryId()).isEqualTo(memo1.getCategory().getId());
+        assertThat(result.get(0).getMemoStatus()).isEqualTo(memo1.getMemoStatus());
 
         assertThat(result.get(1).getMemoContent()).isEqualTo(memo2.getContent());
         assertThat(result.get(1).getMemoLink()).isEqualTo(memo2.getLink());
         assertThat(result.get(1).getMemoDeadLine()).isEqualTo(memo2.getMemoDeadLine());
-        assertThat(result.get(1).getCategoryName()).isEqualTo(
-            memo2.getCategory().getCategoryName());
+        assertThat(result.get(1).getCategoryId()).isEqualTo(memo2.getCategory().getId());
+        assertThat(result.get(1).getMemoStatus()).isEqualTo(memo2.getMemoStatus());
 
         assertThat(result.get(2).getMemoContent()).isEqualTo(memo3.getContent());
         assertThat(result.get(2).getMemoLink()).isEqualTo(memo3.getLink());
         assertThat(result.get(2).getMemoDeadLine().withNano(0)).isEqualTo(memo3.getMemoDeadLine().withNano(0));
-        assertThat(result.get(2).getCategoryName()).isEqualTo(
-            memo3.getCategory().getCategoryName());
+        assertThat(result.get(2).getCategoryId()).isEqualTo(memo3.getCategory().getId());
+        assertThat(result.get(1).getMemoStatus()).isEqualTo(memo3.getMemoStatus());
 
         assertThat(result).extracting("memoContent").doesNotContain(memo4.getContent());
         assertThat(result).extracting("memoLink").doesNotContain(memo4.getContent());
         assertThat(result).extracting("memoDeadLine").doesNotContain(memo4.getContent());
-        assertThat(result).extracting("categoryName")
-            .doesNotContain(memo4.getCategory().getCategoryName());
     }
 }

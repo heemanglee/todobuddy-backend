@@ -32,10 +32,10 @@ public class CategoryCustomRepositoryImpl implements CategoryCustomRepository {
     }
 
     @Override
-    public Category existCategory(User user, String categoryName) {
+    public Category existCategory(User user, Long categoryId) {
         return queryFactory
             .selectFrom(category)
-            .where(category.user.eq(user), category.categoryName.eq(categoryName))
+            .where(category.user.eq(user), category.id.eq(categoryId))
             .fetchOne();
     }
 }
