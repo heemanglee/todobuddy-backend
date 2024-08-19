@@ -108,7 +108,7 @@ public class UserController {
 
         String verifyCode = emailService.sendMail(emailMessage);
 
-        return Response.of(HttpStatus.CREATED, new VerifyCodeResponse(verifyCode));
+        return Response.of(HttpStatus.CREATED, new VerifyCodeResponse(Integer.parseInt(verifyCode)));
     }
 
     @Operation(summary = "비밀번호 변경", description = "비밀번호 변경 API")

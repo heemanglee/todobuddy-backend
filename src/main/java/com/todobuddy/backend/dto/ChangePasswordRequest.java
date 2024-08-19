@@ -2,6 +2,7 @@ package com.todobuddy.backend.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 
 @Getter
@@ -12,9 +13,9 @@ public class ChangePasswordRequest {
     @Schema(description = "새로운 비밀번호를 설정할 이메일", example = "test@test.com")
     private String email;
 
-    @NotBlank(message = "인증 코드를 입력하세요.")
+    @NotNull(message = "인증 코드를 입력하세요.")
     @Schema(description = "인증 코드 4자리", example = "1234")
-    private String verificationCode;
+    private Integer verificationCode;
 
     @NotBlank(message = "새로운 비밀번호를 입력하세요.")
     @Schema(description = "새로운 비밀번호", example = "password1234")
