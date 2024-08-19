@@ -82,12 +82,6 @@ public class MemoService {
         Memo findMemo = findMemoByIdInQuery(memoId);
         validationMemoAuthor(user, findMemo); // 메모 작성자가 동일한지 검증한다.
 
-        // 휴지통에 있던 메모를 복원한다.
-        if(findMemo.getDeletedTime() != null) {
-            findMemo.restoreMemo();
-            return;
-        }
-
         memoRepository.deleteById(memoId);
     }
 

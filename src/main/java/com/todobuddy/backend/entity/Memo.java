@@ -15,14 +15,10 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.SQLRestriction;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@SQLDelete(sql = "UPDATE memo SET deleted_time = now() WHERE memo_id = ?")
-@SQLRestriction("deleted_time IS NULL")
 public class Memo extends BaseEntity {
 
     @Id
@@ -51,9 +47,6 @@ public class Memo extends BaseEntity {
     @Column(name = "memo_status")
     private MemoStatus memoStatus = MemoStatus.NOT_COMPLETED; // 완료 여부
 
-    @Column(name = "deleted_time")
-    private LocalDateTime deletedTime; // 삭제 기간, 저장된 값 기준으로 30일이 지나면 hard delete
-
     @Builder
     public Memo(String content, User user, Category category, String link, LocalDateTime memoDeadLine)  {
         this.content = content;
@@ -72,10 +65,6 @@ public class Memo extends BaseEntity {
 
     public void updateMemoStatus(MemoStatus memoStatus)  {
         this.memoStatus = memoStatus;
-    }
-
-    public void restoreMemo() {
-        this.deletedTime = null;
     }
 
 }

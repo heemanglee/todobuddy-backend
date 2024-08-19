@@ -4,6 +4,7 @@ package com.todobuddy.backend.service;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.todobuddy.backend.dto.CreateMemoRequest;
@@ -16,6 +17,7 @@ import com.todobuddy.backend.entity.Memo;
 import com.todobuddy.backend.entity.MemoStatus;
 import com.todobuddy.backend.entity.User;
 import com.todobuddy.backend.exception.category.CategoryNotFoundException;
+import com.todobuddy.backend.exception.memo.MemoAuthorMismatchException;
 import com.todobuddy.backend.exception.memo.MemoStatusUnchangedException;
 import com.todobuddy.backend.repository.CategoryRepository;
 import com.todobuddy.backend.repository.MemoRepository;
@@ -260,4 +262,33 @@ public class MemoServiceTest {
             () -> memoService.updateMemoStatus(user, memo.getId(), request));
     }
 
+    @Test
+    @DisplayName("작성한 메모를 삭제할 수 있다.")
+    void deleteMemoTest() {
+        // given
+        Memo memo = TestUtils.createMemo(user, category, "토익", null, null);
+        when(memoRepository.findMemoByIdInQuery(any())).thenReturn(Optional.of(memo));
+
+        // when
+        memoService.deleteMemo(user, memo.getId());
+
+        // then
+        assertThat(memoRepository.findById(memo.getId())).isEmpty();
+        verify(memoRepository).deleteById(any());
+    }
+
+    @Test
+    @DisplayName("메모 작성자와 메모 작성자가 동일하지 않을 경우 예외가 발생한다.")
+    void deleteMemoExceptionTest() {
+        // given
+        User otherUser = TestUtils.createUser("aaa@aaa.com", "aaa", "aaa");
+        ReflectionTestUtils.setField(otherUser, "id", 2L); // 다른 ID 설정
+        Memo memo = TestUtils.createMemo(otherUser, category, "토익", null, null);
+        ReflectionTestUtils.setField(memo, "id", 1L); // Ensure memo ID is set
+        when(memoRepository.findMemoByIdInQuery(memo.getId())).thenReturn(Optional.of(memo));
+
+        // when & then
+        assertThrows(MemoAuthorMismatchException.class,
+            () -> memoService.deleteMemo(user, memo.getId()));
+    }
 }

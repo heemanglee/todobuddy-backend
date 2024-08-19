@@ -74,9 +74,9 @@ public class MemoController {
         return Response.of(response);
     }
 
-    @Operation(summary = "메모 삭제(복구)", description = "메모를 휴지통으로 이동하거나, 휴지통에서 복구하는 API")
+    @Operation(summary = "메모 삭제", description = "메모를 영구적으로 삭제하는 API")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "204", description = "메모 삭제(복구) 성공")
+        @ApiResponse(responseCode = "204", description = "메모 삭제 성공")
     })
     @DeleteMapping("/{memoId}")
     public Response<Void> deleteMemo(@CurrentUser User user, @PathVariable("memoId") Long memoId) {
