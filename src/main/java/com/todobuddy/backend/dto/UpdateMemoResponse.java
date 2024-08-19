@@ -19,6 +19,6 @@ public class UpdateMemoResponse {
     @Schema(description = "수정된 메모 링크", example = "https://www.todobuddy.com")
     private String memoLink;
 
-    @Schema(description = "수정된 카테고리 이름", example = "토익")
-    private String categoryName;
+    @Schema(description = "카테고리 ID", example = "1")
+    private Long categoryId;
 }

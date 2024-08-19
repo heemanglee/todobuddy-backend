@@ -63,7 +63,7 @@ public class MemoServiceTest {
         final String content = "토익 공부하기";
         final LocalDateTime deadLine = LocalDateTime.now();
 
-        when(categoryRepository.existCategory(user, category.getCategoryName())).thenReturn(
+        when(categoryRepository.existCategory(user, category.getId())).thenReturn(
             category);
 
         Memo memo = TestUtils.createMemo(user, category, content, memoLink, deadLine);
@@ -72,7 +72,7 @@ public class MemoServiceTest {
         // when
         CreateMemoRequest request = new CreateMemoRequest();
         ReflectionTestUtils.setField(request, "memoContent", content);
-        ReflectionTestUtils.setField(request, "categoryName", category.getCategoryName());
+        ReflectionTestUtils.setField(request, "categoryId", category.getId());
         ReflectionTestUtils.setField(request, "memoLink", memoLink);
 
         CreateMemoResponse result = memoService.createMemo(user, request);
@@ -92,7 +92,7 @@ public class MemoServiceTest {
         final String content = "토익 공부하기";
         final LocalDateTime deadLine = LocalDateTime.now();
 
-        when(categoryRepository.existCategory(user, category.getCategoryName())).thenReturn(
+        when(categoryRepository.existCategory(user, category.getId())).thenReturn(
             category);
 
         Memo memo = TestUtils.createMemo(user, category, content, memoLink, deadLine);
@@ -101,7 +101,7 @@ public class MemoServiceTest {
         // when
         CreateMemoRequest request = new CreateMemoRequest();
         ReflectionTestUtils.setField(request, "memoContent", content);
-        ReflectionTestUtils.setField(request, "categoryName", category.getCategoryName());
+        ReflectionTestUtils.setField(request, "categoryId", category.getId());
         ReflectionTestUtils.setField(request, "memoLink", memoLink);
 
         CreateMemoResponse result = memoService.createMemo(user, request);
@@ -119,12 +119,12 @@ public class MemoServiceTest {
         final String memoLink = "https://www.todobuddy.com";
         final String content = "토익 공부하기";
 
-        when(categoryRepository.existCategory(user, category.getCategoryName())).thenReturn(null);
+        when(categoryRepository.existCategory(user, category.getId())).thenReturn(null);
 
         // when
         CreateMemoRequest request = new CreateMemoRequest();
         ReflectionTestUtils.setField(request, "memoContent", content);
-        ReflectionTestUtils.setField(request, "categoryName", "토익");
+        ReflectionTestUtils.setField(request, "categoryId", 1L);
         ReflectionTestUtils.setField(request, "memoLink", memoLink);
 
         // then
@@ -142,14 +142,14 @@ public class MemoServiceTest {
 
         Memo memo = TestUtils.createMemo(user, category, content, memoLink, deadLine);
 
-        when(categoryRepository.existCategory(user, category.getCategoryName())).thenReturn(
+        when(categoryRepository.existCategory(user, category.getId())).thenReturn(
             category);
         when(memoRepository.save(any())).thenReturn(memo);
 
         // when
         CreateMemoRequest request = new CreateMemoRequest();
         ReflectionTestUtils.setField(request, "memoContent", content);
-        ReflectionTestUtils.setField(request, "categoryName", "토익");
+        ReflectionTestUtils.setField(request, "categoryId", 1L);
         ReflectionTestUtils.setField(request, "memoLink", memoLink);
         ReflectionTestUtils.setField(request, "memoDeadLine", deadLine);
 
@@ -172,14 +172,14 @@ public class MemoServiceTest {
 
         Memo memo = TestUtils.createMemo(user, category, content, memoLink, deadLine);
 
-        when(categoryRepository.existCategory(user, category.getCategoryName())).thenReturn(
+        when(categoryRepository.existCategory(user, category.getId())).thenReturn(
             category);
         when(memoRepository.save(any())).thenReturn(memo);
 
         // when
         CreateMemoRequest request = new CreateMemoRequest();
         ReflectionTestUtils.setField(request, "memoContent", content);
-        ReflectionTestUtils.setField(request, "categoryName", "토익");
+        ReflectionTestUtils.setField(request, "categoryId", 1L);
         ReflectionTestUtils.setField(request, "memoLink", memoLink);
         ReflectionTestUtils.setField(request, "memoDeadLine", deadLine);
 
@@ -191,42 +191,6 @@ public class MemoServiceTest {
         assertThat(result.getMemoContent()).isEqualTo(content);
         assertThat(result.getMemoDeadLine()).isNotNull();
         assertThat(result.getMemoDeadLine()).isEqualTo(deadLine);
-    }
-
-    @Test
-    @DisplayName("메모를 수정할 수 있다.")
-    void updateMemoTest() {
-        // given
-        final String memoLink = "https://www.todobuddy.com";
-        final String content = "토익 공부하기";
-        final LocalDateTime deadLine = LocalDateTime.now();
-        Memo memo = TestUtils.createMemo(user, category, content, memoLink, deadLine);
-        when(memoRepository.findById(any())).thenReturn(Optional.of(memo));
-
-        final String otherCategoryName = "운동";
-        Category otherCategory = TestUtils.createCategory(user, otherCategoryName);
-        when(categoryRepository.existCategory(user, otherCategoryName)).thenReturn(otherCategory);
-
-        final LocalDateTime newDeadLine = LocalDateTime.now().plusHours(5);
-
-        // then
-        UpdateMemoRequest request = new UpdateMemoRequest();
-        ReflectionTestUtils.setField(request, "memoContent", "운동하기");
-        ReflectionTestUtils.setField(request, "categoryName", "운동");
-        ReflectionTestUtils.setField(request, "memoLink", "https://www.change.com");
-        ReflectionTestUtils.setField(request, "memoDeadLine", newDeadLine);
-
-        UpdateMemoResponse result = memoService.updateMemo(user, memo.getId(), request);
-
-        // then
-        assertThat(result.getMemoDeadLine()).isEqualTo(newDeadLine);
-        assertThat(result.getMemoDeadLine()).isNotEqualTo(deadLine);
-        assertThat(result.getMemoLink()).isEqualTo("https://www.change.com");
-        assertThat(result.getMemoLink()).isNotEqualTo(memoLink);
-        assertThat(result.getCategoryName()).isEqualTo(otherCategoryName);
-        assertThat(result.getCategoryName()).isNotEqualTo(category.getCategoryName());
-        assertThat(result.getMemoContent()).isEqualTo(memo.getContent());
-        assertThat(result.getMemoContent()).isNotEqualTo(content);
     }
 
     @Test
@@ -291,4 +255,29 @@ public class MemoServiceTest {
         assertThrows(MemoAuthorMismatchException.class,
             () -> memoService.deleteMemo(user, memo.getId()));
     }
+
+    @Test
+    @DisplayName("메모를 수정할 수 있다.")
+    void updateMemoTest() {
+        // given
+        Memo memo = TestUtils.createMemo(user, category, "test", null, null);
+        when(memoRepository.findById(any())).thenReturn(Optional.of(memo));
+        when(categoryRepository.existCategory(user, category.getId())).thenReturn(category);
+
+        // when
+        UpdateMemoRequest request = new UpdateMemoRequest();
+        ReflectionTestUtils.setField(request, "memoContent", "update test");
+        ReflectionTestUtils.setField(request, "categoryId", category.getId());
+        ReflectionTestUtils.setField(request, "memoLink", "https://www.todobuddy.com");
+        ReflectionTestUtils.setField(request, "memoDeadLine", null);
+
+        UpdateMemoResponse response = memoService.updateMemo(user, memo.getId(), request);
+
+        // then
+        assertThat(response.getMemoContent()).isEqualTo("update test");
+        assertThat(response.getMemoLink()).isEqualTo("https://www.todobuddy.com");
+        assertThat(response.getMemoDeadLine()).isNull();
+        assertThat(response.getCategoryId()).isEqualTo(category.getId());
+    }
 }
+

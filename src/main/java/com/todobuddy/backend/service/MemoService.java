@@ -35,8 +35,8 @@ public class MemoService {
 
     @Transactional
     public CreateMemoResponse createMemo(User user, CreateMemoRequest request) {
-        Category findCategory = validationExistCategory(user,
-            request.getCategoryName());// 사용자가 등록한 카테고리 존재 여부 확인
+        // 사용자가 등록한 카테고리 존재 여부 확인
+        Category findCategory = validationExistCategory(user, request.getCategoryId());
 
         Memo memo = Memo.builder()
             .category(findCategory)
@@ -54,13 +54,13 @@ public class MemoService {
     @Transactional
     public UpdateMemoResponse updateMemo(User user, Long memoId, UpdateMemoRequest request) {
         Memo findMemo = findMemoById(memoId);
-        Category findCategory = validationExistCategory(user, request.getCategoryName());
+        Category findCategory = validationExistCategory(user, request.getCategoryId());
 
         findMemo.updateMemo(request.getMemoContent(), findCategory, request.getMemoLink(),
             request.getMemoDeadLine());
 
         return new UpdateMemoResponse(findMemo.getMemoDeadLine(), findMemo.getContent(),
-            findMemo.getLink(), findCategory.getCategoryName());
+            findMemo.getLink(), findCategory.getId());
     }
 
     @Transactional
@@ -111,8 +111,8 @@ public class MemoService {
             .orElseThrow(() -> new MemoNotFoundException(MemoErrorCode.MEMO_NOT_FOUND));
     }
 
-    private Category validationExistCategory(User user, String categoryName) {
-        Category findCategory = categoryRepository.existCategory(user, categoryName);
+    private Category validationExistCategory(User user, Long categoryId) {
+        Category findCategory = categoryRepository.existCategory(user, categoryId);
         if (findCategory == null) {
             throw new CategoryNotFoundException(CategoryErrorCode.CATEGORY_NOT_FOUND);
         }
