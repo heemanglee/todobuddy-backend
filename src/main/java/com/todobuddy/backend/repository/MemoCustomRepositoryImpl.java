@@ -22,12 +22,12 @@ public class MemoCustomRepositoryImpl implements MemoCustomRepository{
             .select(
                 Projections.constructor(
                     GetMemosResponse.class,
-                    memo.category.categoryName,
-                    memo.category.categoryOrder,
+                    memo.category.id,
                     memo.content,
                     memo.link,
                     memo.memoDeadLine,
-                    memo.createdDate
+                    memo.createdDate,
+                    memo.memoStatus
                 )
             )
             .from(memo)

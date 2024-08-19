@@ -1,5 +1,6 @@
 package com.todobuddy.backend.dto;
 
+import com.todobuddy.backend.entity.MemoStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
@@ -11,11 +12,8 @@ import lombok.Getter;
 @Schema(description = "메모 조회 Response DTO")
 public class GetMemosResponse {
 
-    @Schema(description = "카테고리 이름", example = "토익")
-    private String categoryName;
-
-    @Schema(description = "카테고리 순서", example = "1 (1부터 시작)")
-    private int categoryOrder;
+    @Schema(description = "카테고리 ID", example = "1")
+    private Long categoryId;
 
     @Schema(description = "메모 내용", example = "토익 공부")
     private String memoContent;
@@ -28,4 +26,7 @@ public class GetMemosResponse {
 
     @Schema(description = "메모 생성 일자", example = "2024-08-16T23:59:59")
     private LocalDateTime memoCreatedDate;
+
+    @Schema(description = "메모 상태", example = "NOT_COMPLETED, COMPLETED")
+    private MemoStatus memoStatus;
 }
