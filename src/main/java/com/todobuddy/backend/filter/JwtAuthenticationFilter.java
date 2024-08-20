@@ -5,6 +5,7 @@ import com.todobuddy.backend.repository.UserRepository;
 import com.todobuddy.backend.security.CustomUserDetails;
 import com.todobuddy.backend.security.jwt.JwtTokenProvider;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -35,14 +36,21 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        CustomUserDetails user = parseToken(jwtToken);
+        try {
+            CustomUserDetails user = parseToken(jwtToken);
 
-        UsernamePasswordAuthenticationToken authenticated = UsernamePasswordAuthenticationToken.authenticated(
-            user, "", user.getAuthorities()
-        );
-        SecurityContextHolder.getContext().setAuthentication(authenticated);
+            UsernamePasswordAuthenticationToken authenticated = UsernamePasswordAuthenticationToken.authenticated(
+                user, "", user.getAuthorities()
+            );
+            SecurityContextHolder.getContext().setAuthentication(authenticated);
 
-        filterChain.doFilter(request, response);
+            filterChain.doFilter(request, response);
+        } catch(ExpiredJwtException e) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write("Access Token이 만료되었습니다.");
+            return;
+        }
+
     }
 
     private CustomUserDetails parseToken(String jwtToken) {
