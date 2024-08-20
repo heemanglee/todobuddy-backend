@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
+import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -46,9 +47,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             filterChain.doFilter(request, response);
         } catch(ExpiredJwtException e) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write("Access Token이 만료되었습니다.");
-            return;
+            throw new InsufficientAuthenticationException("토큰이 만료되었습니다.");
         }
 
     }
@@ -64,7 +63,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         String email = claims.getSubject();
-//        String role = claims.get("auth", String.class);
 
         User findUser = findUserByEmail(email); // GET /users/me에서 findById()를 사용하기 위해 User 조회가 필요함.
 
