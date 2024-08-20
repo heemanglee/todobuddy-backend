@@ -44,7 +44,7 @@ public class JwtTokenProvider {
     }
 
     // ACCESS TOKEN 생성
-    private String generateAccessToken(User user) {
+    public String generateAccessToken(User user) {
         long now = new Date().getTime();
         return Jwts.builder()
             .setSubject(user.getEmail())

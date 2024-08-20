@@ -5,6 +5,7 @@ import com.todobuddy.backend.repository.UserRepository;
 import com.todobuddy.backend.security.CustomUserDetails;
 import com.todobuddy.backend.security.jwt.JwtTokenProvider;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,6 +14,7 @@ import java.io.IOException;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
+import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -35,14 +37,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        CustomUserDetails user = parseToken(jwtToken);
+        try {
+            CustomUserDetails user = parseToken(jwtToken);
 
-        UsernamePasswordAuthenticationToken authenticated = UsernamePasswordAuthenticationToken.authenticated(
-            user, "", user.getAuthorities()
-        );
-        SecurityContextHolder.getContext().setAuthentication(authenticated);
+            UsernamePasswordAuthenticationToken authenticated = UsernamePasswordAuthenticationToken.authenticated(
+                user, "", user.getAuthorities()
+            );
+            SecurityContextHolder.getContext().setAuthentication(authenticated);
 
-        filterChain.doFilter(request, response);
+            filterChain.doFilter(request, response);
+        } catch(ExpiredJwtException e) {
+            throw new InsufficientAuthenticationException("토큰이 만료되었습니다.");
+        }
+
     }
 
     private CustomUserDetails parseToken(String jwtToken) {
@@ -56,7 +63,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         String email = claims.getSubject();
-//        String role = claims.get("auth", String.class);
 
         User findUser = findUserByEmail(email); // GET /users/me에서 findById()를 사용하기 위해 User 조회가 필요함.
 
