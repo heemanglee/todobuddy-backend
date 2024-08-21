@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -79,6 +80,20 @@ public class UserController {
         LoginResponse response = userService.login(request);
         return Response.of(response);
     }
+
+    @Operation(summary = "로그아웃", description = "로그아웃 API")
+    @ApiResponses(
+        value = {
+            @ApiResponse(responseCode = "204", description = "로그아웃 성공")
+        }
+    )
+    @PostMapping("/logout")
+    public Response<Void> logoutUser(@RequestHeader("Authorization") String tokenHeader) {
+        String accessToken = tokenHeader.substring(7); // Bearer xxxx
+        userService.logout(accessToken); // Redis에 토큰 저장
+        return Response.of(HttpStatus.NO_CONTENT, null);
+    }
+
 
     @Operation(summary = "이메일 검증", description = "아이디/비밀번호 찾기에서 인증 코드를 전송할 이메일")
     @ApiResponses(
