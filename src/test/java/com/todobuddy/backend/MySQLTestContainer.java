@@ -5,7 +5,7 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 @Testcontainers
-public abstract class TestContainerSupport {
+public abstract class MySQLTestContainer {
 
     @Container
     static MySQLContainer<?> MYSQL_CONTAINER = new MySQLContainer<>("mysql:8.0.33")
