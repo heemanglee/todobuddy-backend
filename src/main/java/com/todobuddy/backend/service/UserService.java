@@ -9,6 +9,7 @@ import com.todobuddy.backend.dto.GetUserInfoResponse;
 import com.todobuddy.backend.dto.LoginRequest;
 import com.todobuddy.backend.dto.LoginResponse;
 import com.todobuddy.backend.entity.Category;
+import com.todobuddy.backend.entity.TokenBlackList;
 import com.todobuddy.backend.entity.User;
 import com.todobuddy.backend.entity.VerificationCode;
 import com.todobuddy.backend.exception.common.CommonErrorCode;
@@ -17,6 +18,7 @@ import com.todobuddy.backend.exception.user.DuplicateEmailException;
 import com.todobuddy.backend.exception.user.UserErrorCode;
 import com.todobuddy.backend.exception.user.UserNotFoundException;
 import com.todobuddy.backend.repository.CategoryRepository;
+import com.todobuddy.backend.repository.TokenBlackListRepository;
 import com.todobuddy.backend.repository.UserRepository;
 import com.todobuddy.backend.repository.VerificationCodeRepository;
 import com.todobuddy.backend.security.jwt.JwtTokenProvider;
@@ -37,6 +39,7 @@ public class UserService {
     private final JwtTokenProvider jwtTokenProvider;
     private final VerificationCodeRepository verificationCodeRepository;
     private final CategoryRepository categoryRepository;
+    private final TokenBlackListRepository tokenBlackListRepository;
 
     // 사용자 등록
     @Transactional
@@ -71,6 +74,13 @@ public class UserService {
 
         AuthResponse createJwtToken = jwtTokenProvider.generateToken(findUser);
         return new LoginResponse(createJwtToken);
+    }
+
+    public void logout(String accessToken) {
+        TokenBlackList tokenBlackList = TokenBlackList.builder()
+            .token(accessToken)
+            .build();
+        tokenBlackListRepository.save(tokenBlackList);
     }
 
     @Transactional(readOnly = true)

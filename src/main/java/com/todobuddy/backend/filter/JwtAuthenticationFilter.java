@@ -1,6 +1,8 @@
 package com.todobuddy.backend.filter;
 
+import com.todobuddy.backend.entity.TokenBlackList;
 import com.todobuddy.backend.entity.User;
+import com.todobuddy.backend.repository.TokenBlackListRepository;
 import com.todobuddy.backend.repository.UserRepository;
 import com.todobuddy.backend.security.CustomUserDetails;
 import com.todobuddy.backend.security.jwt.JwtTokenProvider;
@@ -26,6 +28,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtTokenProvider jwtTokenProvider;
     private final UserRepository userRepository;
+    private final TokenBlackListRepository tokenBlackListRepository;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
@@ -35,6 +38,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (jwtToken == null) {
             filterChain.doFilter(request, response);
             return;
+        }
+
+        // BlackList에 Access Token이 저장되어 있는지 확인한다.
+        TokenBlackList tokenBlackList = tokenBlackListRepository.findById(jwtToken).orElse(null);
+        if (tokenBlackList != null) {
+            throw new InsufficientAuthenticationException("로그아웃된 토큰입니다.");
         }
 
         try {
