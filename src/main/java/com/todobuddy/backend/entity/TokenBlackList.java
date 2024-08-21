@@ -6,7 +6,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 
 @Builder
-@RedisHash(value = "token_blacklist", timeToLive = 3600000L)
+@RedisHash(value = "token_blacklist", timeToLive = 3600L)
 @Getter
 public class TokenBlackList {
 
