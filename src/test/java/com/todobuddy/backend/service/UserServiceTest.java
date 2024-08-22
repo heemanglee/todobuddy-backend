@@ -119,7 +119,7 @@ class UserServiceTest {
 
         String jwtToken = "jwtToken";
         String refreshToken = "refrestToken";
-        AuthResponse authResponse = new AuthResponse(jwtToken, refreshToken, "Bearer");
+        AuthResponse authResponse = new AuthResponse(jwtToken, refreshToken, null,"Bearer");
         when(jwtTokenProvider.generateToken(createUser)).thenReturn(authResponse);
 
         // when

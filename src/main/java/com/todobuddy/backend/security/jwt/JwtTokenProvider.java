@@ -8,7 +8,9 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import java.security.Key;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TimeZone;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -40,7 +42,7 @@ public class JwtTokenProvider {
     public AuthResponse generateToken(User user) {
         String accessToken = generateAccessToken(user);
         String refreshToken = generateRefreshToken(user);
-        return new AuthResponse(accessToken, refreshToken, "Bearer");
+        return new AuthResponse(accessToken, refreshToken, getExpirationDateFromToken(refreshToken), "Bearer");
     }
 
     // ACCESS TOKEN 생성
@@ -76,6 +78,18 @@ public class JwtTokenProvider {
             .build()
             .parseClaimsJws(jwtToken)
             .getBody();
+    }
+
+    public String getExpirationDateFromToken(String token)  {
+        Claims claims = Jwts.parserBuilder()
+            .setSigningKey(key)
+            .build()
+            .parseClaimsJws(token)
+            .getBody();
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        return sdf.format(claims.getExpiration());
     }
 
 }
