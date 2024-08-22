@@ -2,6 +2,8 @@ package com.todobuddy.backend.service;
 
 import com.todobuddy.backend.dto.AuthResponse;
 import com.todobuddy.backend.entity.User;
+import com.todobuddy.backend.exception.jwt.JwtErrorCode;
+import com.todobuddy.backend.exception.jwt.TokenExpiredException;
 import com.todobuddy.backend.exception.user.UserErrorCode;
 import com.todobuddy.backend.exception.user.UserNotFoundException;
 import com.todobuddy.backend.repository.UserRepository;
@@ -31,7 +33,7 @@ public class AuthService {
             String newAccessToken = jwtTokenProvider.generateAccessToken(findUser); // 새로운 Access Token 발급
             return new AuthResponse(newAccessToken, extractBearerToken, "Bearer");
         } catch (ExpiredJwtException e) { // Refresh Token 만료
-            return null;
+            throw new TokenExpiredException(JwtErrorCode.EXPIRED_TOKEN);
         }
     }
 
