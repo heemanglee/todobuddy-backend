@@ -31,7 +31,7 @@ public class AuthService {
             User findUser = findUserByEmail(email);
 
             String newAccessToken = jwtTokenProvider.generateAccessToken(findUser); // 새로운 Access Token 발급
-            return new AuthResponse(newAccessToken, extractBearerToken, "Bearer");
+            return new AuthResponse(newAccessToken, extractBearerToken, jwtTokenProvider.getExpirationDateFromToken(refreshToken), "Bearer");
         } catch (ExpiredJwtException e) { // Refresh Token 만료
             throw new TokenExpiredException(JwtErrorCode.EXPIRED_TOKEN);
         }
