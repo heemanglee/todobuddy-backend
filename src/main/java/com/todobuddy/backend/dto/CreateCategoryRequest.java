@@ -13,7 +13,7 @@ public class CreateCategoryRequest {
     @Schema(description = "카테고리 이름", example = "토익")
     private String categoryName;
 
-    @NotNull(message = "카테고리 순서를 입력하세요.")
-    @Schema(description = "카테고리 순서", example = "1")
-    private Integer categoryOrder;
+    @NotNull(message = "몇 번째 카테고리인지 입력하세요. 값 : (1, 2, 3)")
+    @Schema(description = "카테고리 번호", example = "(1, 2, 3) 중 하나")
+    private Integer categoryOrderId;
 }
