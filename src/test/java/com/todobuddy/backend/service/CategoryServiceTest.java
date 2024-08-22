@@ -50,7 +50,7 @@ class CategoryServiceTest {
         // then
         CreateCategoryRequest request = new CreateCategoryRequest();
         ReflectionTestUtils.setField(request, "categoryName", categoryName);
-        ReflectionTestUtils.setField(request, "categoryOrder", 1);
+        ReflectionTestUtils.setField(request, "categoryOrderId", 1);
 
         categoryService.createCategory(user, request);
 
@@ -86,13 +86,13 @@ class CategoryServiceTest {
         List<Category> list = new ArrayList<>();
         for (int i = 1; i <= 3; i++) {
             Category category = TestUtils.createCategory(user, "category" + i);
-            ReflectionTestUtils.setField(category, "categoryOrder", i);
+            ReflectionTestUtils.setField(category, "categoryOrderId", i);
             list.add(category);
         }
 
         List<GetCategoriesResponse> categories = list.stream()
             .map(c -> new GetCategoriesResponse(c.getId(), c.getCategoryName(),
-                c.getCategoryOrder()))
+                c.getCategoryOrderId()))
             .toList();
 
         when(categoryRepository.getCategories(user)).thenReturn(categories);
@@ -103,13 +103,13 @@ class CategoryServiceTest {
         // then
         assertThat(response.size()).isEqualTo(3);
         assertThat(response.get(0).getCategoryName()).isEqualTo("category1");
-        assertThat(response.get(0).getCategoryOrder()).isEqualTo(1);
+        assertThat(response.get(0).getCategoryOrderId()).isEqualTo(1);
 
         assertThat(response.get(1).getCategoryName()).isEqualTo("category2");
-        assertThat(response.get(1).getCategoryOrder()).isEqualTo(2);
+        assertThat(response.get(1).getCategoryOrderId()).isEqualTo(2);
 
         assertThat(response.get(2).getCategoryName()).isEqualTo("category3");
-        assertThat(response.get(2).getCategoryOrder()).isEqualTo(3);
+        assertThat(response.get(2).getCategoryOrderId()).isEqualTo(3);
     }
 
     @Test
@@ -158,19 +158,19 @@ class CategoryServiceTest {
         when(categoryRepository.countByUser(user)).thenReturn(2L);
 
         Category category = TestUtils.createCategory(user, "토익");
-        ReflectionTestUtils.setField(category, "categoryOrder", 1);
+        ReflectionTestUtils.setField(category, "categoryOrderId", 1);
         when(categoryRepository.save(any())).thenReturn(category);
 
         // when
         CreateCategoryRequest request = new CreateCategoryRequest();
         ReflectionTestUtils.setField(request, "categoryName", "토익");
-        ReflectionTestUtils.setField(request, "categoryOrder", 1);
+        ReflectionTestUtils.setField(request, "categoryOrderId", 1);
 
         CreateCategoryResponse response = categoryService.createCategory(user, request);
 
         // then
         assertThat(response.getCategoryName()).isEqualTo("토익");
-        assertThat(response.getCategoryOrder()).isEqualTo(1);
+        assertThat(response.getCategoryOrderId()).isEqualTo(1);
     }
 
     @Test
@@ -184,7 +184,7 @@ class CategoryServiceTest {
         // when
         CreateCategoryRequest request = new CreateCategoryRequest();
         ReflectionTestUtils.setField(request, "categoryName", "토익");
-        ReflectionTestUtils.setField(request, "categoryOrder", 4);
+        ReflectionTestUtils.setField(request, "categoryOrderId", 4);
 
         // then
         assertThrows(MaxCategoriesExceededException.class,

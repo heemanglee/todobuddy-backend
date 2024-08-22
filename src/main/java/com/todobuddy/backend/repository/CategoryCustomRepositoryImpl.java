@@ -23,7 +23,7 @@ public class CategoryCustomRepositoryImpl implements CategoryCustomRepository {
                 GetCategoriesResponse.class,
                 category.id,
                 category.categoryName,
-                category.categoryOrder
+                category.categoryOrderId
             ))
             .from(category)
             .join(category.user, QUser.user)

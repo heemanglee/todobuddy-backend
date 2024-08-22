@@ -39,14 +39,14 @@ public class Category extends BaseEntity{
     private User user; // 카테고리를 등록한 사용자
 
     @Builder
-    public Category(String categoryName, User user, int categoryOrder) {
+    public Category(String categoryName, User user, int categoryOrderId) {
         this.categoryName = categoryName;
         this.user = user;
-        this.categoryOrder = categoryOrder;
+        this.categoryOrderId = categoryOrderId;
     }
 
-    @Column(name = "category_order")
-    private int categoryOrder; // 카테고리 순서
+    @Column(name = "category_order_id")
+    private int categoryOrderId; // 카테고리 순서
 
     @Convert(converter = BooleanToIntegerConverter.class)
     @Column(name = "deleted", nullable = false)

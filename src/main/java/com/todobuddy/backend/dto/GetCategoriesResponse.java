@@ -15,6 +15,6 @@ public class GetCategoriesResponse {
     @Schema(description = "카테고리 이름", example = "토익")
     private String categoryName;
 
-    @Schema(description = "카테고리 순서", example = "1 (1부터 시작)")
-    private int categoryOrder;
+    @Schema(description = "카테고리 순서", example = "(1, 2, 3) 중 하나")
+    private int categoryOrderId;
 }
