@@ -34,11 +34,10 @@ public class CategoryService {
 
         // 카테고리 등록
         Category createCategory = createCategory(user, request.getCategoryName(),
-            request.getCategoryOrderId());
+            request.getCategoryId());
         Category savedCategory = categoryRepository.save(createCategory);
 
-        return new CreateCategoryResponse(savedCategory.getId(), savedCategory.getCategoryName(),
-            savedCategory.getCategoryOrderId());
+        return new CreateCategoryResponse(savedCategory.getCategoryName(), savedCategory.getCategoryOrderId());
     }
 
     // 사용자가 등록한 모든 카테고리 조회
