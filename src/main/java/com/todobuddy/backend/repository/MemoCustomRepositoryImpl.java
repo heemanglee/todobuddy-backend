@@ -24,6 +24,7 @@ public class MemoCustomRepositoryImpl implements MemoCustomRepository{
                     GetMemosResponse.class,
                     memo.category.id,
                     memo.category.categoryOrderId,
+                    memo.id,
                     memo.content,
                     memo.link,
                     memo.memoDeadLine,
