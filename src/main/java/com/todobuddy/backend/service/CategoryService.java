@@ -34,7 +34,7 @@ public class CategoryService {
 
         // 카테고리 등록
         Category createCategory = createCategory(user, request.getCategoryName(),
-            request.getCategoryId());
+            request.getCategoryOrderId());
         Category savedCategory = categoryRepository.save(createCategory);
 
         return new CreateCategoryResponse(savedCategory.getCategoryName(), savedCategory.getCategoryOrderId());

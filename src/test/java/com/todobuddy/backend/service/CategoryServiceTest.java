@@ -50,7 +50,7 @@ class CategoryServiceTest {
         // then
         CreateCategoryRequest request = new CreateCategoryRequest();
         ReflectionTestUtils.setField(request, "categoryName", categoryName);
-        ReflectionTestUtils.setField(request, "categoryId", 1);
+        ReflectionTestUtils.setField(request, "categoryOrderId", 1);
 
         categoryService.createCategory(user, request);
 
@@ -164,13 +164,13 @@ class CategoryServiceTest {
         // when
         CreateCategoryRequest request = new CreateCategoryRequest();
         ReflectionTestUtils.setField(request, "categoryName", "토익");
-        ReflectionTestUtils.setField(request, "categoryId", 1);
+        ReflectionTestUtils.setField(request, "categoryOrderId", 1);
 
         CreateCategoryResponse response = categoryService.createCategory(user, request);
 
         // then
         assertThat(response.getCategoryName()).isEqualTo("토익");
-        assertThat(response.getCategoryId()).isEqualTo(1);
+        assertThat(response.getCategoryOrderId()).isEqualTo(1);
     }
 
     @Test
@@ -184,7 +184,7 @@ class CategoryServiceTest {
         // when
         CreateCategoryRequest request = new CreateCategoryRequest();
         ReflectionTestUtils.setField(request, "categoryName", "토익");
-        ReflectionTestUtils.setField(request, "categoryId", 4);
+        ReflectionTestUtils.setField(request, "categoryOrderId", 4);
 
         // then
         assertThrows(MaxCategoriesExceededException.class,
