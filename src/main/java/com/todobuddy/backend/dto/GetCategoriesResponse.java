@@ -10,11 +10,11 @@ import lombok.Getter;
 public class GetCategoriesResponse {
 
     @Schema(description = "카테고리 ID", example = "1")
-    private Long categoryId;
+    private Long id; //
 
     @Schema(description = "카테고리 이름", example = "토익")
     private String categoryName;
 
     @Schema(description = "카테고리 순서", example = "(1, 2, 3) 중 하나")
-    private int categoryOrderId;
+    private int categoryId;
 }
