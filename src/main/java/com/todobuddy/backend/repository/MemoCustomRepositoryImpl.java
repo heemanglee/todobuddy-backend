@@ -23,6 +23,7 @@ public class MemoCustomRepositoryImpl implements MemoCustomRepository{
                 Projections.constructor(
                     GetMemosResponse.class,
                     memo.category.id,
+                    memo.category.categoryOrderId,
                     memo.content,
                     memo.link,
                     memo.memoDeadLine,

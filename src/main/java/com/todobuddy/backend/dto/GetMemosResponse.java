@@ -15,6 +15,9 @@ public class GetMemosResponse {
     @Schema(description = "카테고리 ID", example = "1")
     private Long categoryId;
 
+    @Schema(description = "카테고리 서", example = "(1, 2, 3) 중 하나")
+    private Integer categoryOrderId;
+
     @Schema(description = "메모 내용", example = "토익 공부")
     private String memoContent;
 
