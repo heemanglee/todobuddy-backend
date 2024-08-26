@@ -13,6 +13,6 @@ public class CreateCategoryResponse {
     private String categoryName;
 
     @Schema(description = "카테고리 순서", example = "1 (1~3까지)")
-    private int categoryId; // 카테고리 식별자가 아닌, 카테고리 순서(1, 2, 3)
+    private int categoryOrderId;
 
 }

@@ -28,6 +28,7 @@ public class CategoryCustomRepositoryImpl implements CategoryCustomRepository {
             .from(category)
             .join(category.user, QUser.user)
             .where(QUser.user.eq(user))
+            .orderBy(category.categoryOrderId.asc())
             .fetch();
     }
 
