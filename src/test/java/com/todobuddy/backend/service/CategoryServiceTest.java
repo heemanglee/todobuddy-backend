@@ -103,13 +103,13 @@ class CategoryServiceTest {
         // then
         assertThat(response.size()).isEqualTo(3);
         assertThat(response.get(0).getCategoryName()).isEqualTo("category1");
-        assertThat(response.get(0).getCategoryId()).isEqualTo(1); // 식별자 ID가 아닌, 카테고리 순서
+        assertThat(response.get(0).getCategoryOrderId()).isEqualTo(1); // 식별자 ID가 아닌, 카테고리 순서
 
         assertThat(response.get(1).getCategoryName()).isEqualTo("category2");
-        assertThat(response.get(1).getCategoryId()).isEqualTo(2);
+        assertThat(response.get(1).getCategoryOrderId()).isEqualTo(2);
 
         assertThat(response.get(2).getCategoryName()).isEqualTo("category3");
-        assertThat(response.get(2).getCategoryId()).isEqualTo(3);
+        assertThat(response.get(2).getCategoryOrderId()).isEqualTo(3);
     }
 
     @Test
