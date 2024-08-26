@@ -15,5 +15,5 @@ public class CreateCategoryRequest {
 
     @NotNull(message = "몇 번째 카테고리인지 입력하세요. 값 : (1, 2, 3)")
     @Schema(description = "카테고리 번호", example = "(1, 2, 3) 중 하나")
-    private Integer categoryOrderId;
+    private Integer categoryId;
 }
