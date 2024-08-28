@@ -42,7 +42,9 @@ jwt:
   refresh-token-expiration-time: ${JWT.REFRESH.EXPIRATION.TIME}
   issuer: ${JWT.ISSUER}
 
-server.domain: ${SERVER.DOMAIN}
+server:
+  domain: ${SERVER.DOMAIN}
+  address: ${SERVER.ADDRESS}
 
 aws:
   paramstore:

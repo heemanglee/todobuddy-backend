@@ -41,4 +41,6 @@ jwt:
   refresh-token-expiration-time: ${JWT_REFRESH_EXPIRATION_TIME}
   issuer: ${JWT_ISSUER}
 
-server.domain: "localhost"
+server:
+  domain: "localhost"
+  address: "127.0.0.1"
