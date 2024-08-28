@@ -12,8 +12,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class CorsConfig {
 
-    @Value("${server.address}")
-    private static String address;
+    @Value("${server.domain}")
+    private static String doamin;
 
     public static CorsConfigurationSource corsConfiguration() {
         CorsConfiguration configuration = new CorsConfiguration();
@@ -22,7 +22,7 @@ public class CorsConfig {
         List<String> allowedOriginPatterns = new ArrayList<>();
         allowedOriginPatterns.add("http://localhost:3000");
         allowedOriginPatterns.add("http://127.0.0.1:3000");
-        allowedOriginPatterns.add(address);
+        allowedOriginPatterns.add(doamin);
 
         List<String> allowedHttpMethods = new ArrayList<>();
         allowedHttpMethods.add("GET");

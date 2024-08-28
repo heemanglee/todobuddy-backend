@@ -26,10 +26,10 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
-            .csrf().disable()
             .cors(cors -> {
                 cors.configurationSource(CorsConfig.corsConfiguration());
             })
+            .csrf().disable()
             .headers(headers -> headers.frameOptions().disable())
             .authorizeHttpRequests(
                 authorizeRequest -> {
