@@ -5,6 +5,8 @@ import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.servers.Server;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -17,11 +19,19 @@ import org.springframework.context.annotation.Configuration;
 )
 public class SwaggerConfig {
 
+    @Value("${server.domain}")
+    private String domain;
+
     @Bean
     public OpenAPI openAPI() {
+
+        Server server = new Server();
+        server.setUrl(domain);
+
         return new OpenAPI()
             .components(new Components())
-            .info(apiInfo());
+            .info(apiInfo())
+            .addServersItem(server);
     }
 
     private Info apiInfo() {

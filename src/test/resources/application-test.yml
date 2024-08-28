@@ -39,3 +39,5 @@ jwt:
   access-token-expiration-time: 1
   refresh-token-expiration-time: 1
   issuer: "11"
+
+server.domain: "test"
