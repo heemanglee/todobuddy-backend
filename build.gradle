@@ -68,6 +68,10 @@ dependencies {
     testImplementation 'org.testcontainers:testcontainers:1.20.1'
     testImplementation 'org.testcontainers:junit-jupiter:1.20.1'
     testImplementation 'org.testcontainers:mysql:1.19.0'
+
+    // AWS Cloud Watch
+    implementation 'ca.pjer:logback-awslogs-appender:1.6.0'
+    implementation 'io.awspring.cloud:spring-cloud-aws-starter'
 }
 
 tasks.named('test') {
