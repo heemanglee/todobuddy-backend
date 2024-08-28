@@ -30,6 +30,7 @@ public class CorsConfig {
         allowedHttpMethods.add("PUT");
         allowedHttpMethods.add("DELETE");
         allowedHttpMethods.add("PATCH");
+        allowedHttpMethods.add("OPTIONS");
 
         configuration.setAllowedOrigins(allowedOriginPatterns);
         configuration.setAllowedMethods(allowedHttpMethods);
