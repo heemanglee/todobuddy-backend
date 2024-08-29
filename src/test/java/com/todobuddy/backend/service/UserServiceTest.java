@@ -210,7 +210,7 @@ class UserServiceTest {
         // when
         ChangePasswordRequest request = new ChangePasswordRequest();
         ReflectionTestUtils.setField(request, "email", email);
-        ReflectionTestUtils.setField(request, "verificationCode", Integer.parseInt(verificationCode));
+        ReflectionTestUtils.setField(request, "verificationCode", verificationCode);
         ReflectionTestUtils.setField(request, "password", "newPassword");
         ReflectionTestUtils.setField(request, "confirmPassword", "newPassword");
 
@@ -241,7 +241,7 @@ class UserServiceTest {
         // when
         ChangePasswordRequest request = new ChangePasswordRequest();
         ReflectionTestUtils.setField(request, "email", email);
-        ReflectionTestUtils.setField(request, "verificationCode", Integer.parseInt(wrongVerificationCode));
+        ReflectionTestUtils.setField(request, "verificationCode", wrongVerificationCode);
         ReflectionTestUtils.setField(request, "password", "newPassword");
         ReflectionTestUtils.setField(request, "confirmPassword", "newPassword");
 

@@ -101,9 +101,8 @@ public class UserService {
             .orElseThrow(() -> new UserNotFoundException(UserErrorCode.USER_NOT_FOUND));
 
         // 인증 코드가 일치하는지 확인
-        if(Integer.parseInt(findVerificationCode.getVerificationCode()) != request.getVerificationCode())  {
-            throw new NotSameVerificationException(CommonErrorCode.NOT_SAME_VERIFICATION);
-        }
+        validationEqualsPassword(findVerificationCode.getVerificationCode(),
+            request.getVerificationCode());
 
         // 비밀번호 변경
         User findUser = findUserByEmail(request.getEmail());
@@ -139,5 +138,15 @@ public class UserService {
             .ifPresent(user -> {
                 throw new DuplicateEmailException(UserErrorCode.DUPLICATE_EMAIL);
             });
+    }
+
+    private boolean isNotEqualsPassword(String findRedisPassword, String password) {
+        return !findRedisPassword.equals(password);
+    }
+
+    private void validationEqualsPassword(String findStoredRedisPassword, String inputPassword) {
+        if (isNotEqualsPassword(findStoredRedisPassword, inputPassword)) {
+            throw new NotSameVerificationException(CommonErrorCode.NOT_SAME_VERIFICATION);
+        }
     }
 }

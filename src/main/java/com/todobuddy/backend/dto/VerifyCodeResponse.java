@@ -10,5 +10,5 @@ import lombok.Getter;
 public class VerifyCodeResponse {
 
     @Schema(description = "생성된 인증 코드(숫자 4개)", example = "1234")
-    private int verifyCode;
+    private String verifyCode;
 }

@@ -15,7 +15,7 @@ public class ChangePasswordRequest {
 
     @NotNull(message = "인증 코드를 입력하세요.")
     @Schema(description = "인증 코드 4자리", example = "1234")
-    private Integer verificationCode;
+    private String verificationCode;
 
     @NotBlank(message = "새로운 비밀번호를 입력하세요.")
     @Schema(description = "새로운 비밀번호", example = "password1234")
