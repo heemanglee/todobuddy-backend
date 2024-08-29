@@ -101,7 +101,7 @@ public class UserService {
             .orElseThrow(() -> new UserNotFoundException(UserErrorCode.USER_NOT_FOUND));
 
         // 인증 코드가 일치하는지 확인
-        if(Integer.parseInt(findVerificationCode.getVerificationCode()) != request.getVerificationCode())  {
+        if(!findVerificationCode.getVerificationCode().equals(request.getVerificationCode()))  {
             throw new NotSameVerificationException(CommonErrorCode.NOT_SAME_VERIFICATION);
         }
 
