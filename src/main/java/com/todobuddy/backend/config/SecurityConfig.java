@@ -22,12 +22,13 @@ public class SecurityConfig {
     private final CustomUserDetailsService customUserDetailsService;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final AuthenticationEntryPoint authenticationEntryPoint;
+    private final CorsConfig corsConfig;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
             .cors(cors -> {
-                cors.configurationSource(CorsConfig.corsConfiguration());
+                cors.configurationSource(corsConfig.corsConfiguration());
             })
             .csrf().disable()
             .headers(headers -> headers.frameOptions().disable())
