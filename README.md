@@ -8,7 +8,7 @@
 
 ## 🛠️ 아키텍처
 ### 개발 도구
-<img src="https://github.com/user-attachments/assets/0af798eb-3255-49be-8a6b-8fcc68d65c68" width="1000"/>
+<img src="https://github.com/user-attachments/assets/24955daf-a969-40b3-a3a5-f65ae54bc333" width="1000"/>
 
 - Java 17
 - SpringBoot 3.3.2, Spring Data JPA, Spring Data Redis
