@@ -1,4 +1,4 @@
-## 🔗 URL
+## 🔗 프로젝트 정보
 - 기간 : 2024.08  ~ ing
 - 배포 URL :
 - Front-end Repository : https://github.com/heejung0413/TodoBuddy-front
