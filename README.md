@@ -1,6 +1,8 @@
 ## 🔗 URL
-- 배포 URL : https://www.todobuddy.site (현재는 접속 안됩니다.)
-- Backend Repo : https://github.com/heemanglee/todobuddy-backend
+- 기간 : 2024.08  ~ ing
+- 배포 URL :
+- Front-end Repository : https://github.com/heejung0413/TodoBuddy-front
+- Back-end Repository : https://github.com/heemanglee/todobuddy-backend
 
 <br>
 
