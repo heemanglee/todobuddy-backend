@@ -8,17 +8,17 @@
 
 ## 🛠️ 아키텍처
 ### 개발 도구
-<img src="https://github.com/user-attachments/assets/1a28c169-ba84-49ce-aa81-44cff74fa82e" width="1000"/>
+<img src="https://github.com/user-attachments/assets/0af798eb-3255-49be-8a6b-8fcc68d65c68" width="1000"/>
 
 - Java 17
-- SpringBoot 3.3.2, Spring Security, Spring Data JPA, Spring Data Redis
+- SpringBoot 3.3.2, Spring Data JPA, Spring Data Redis
+- Spring Security, JWT
 - SpringDoc Swagger 2.6.0
 - QueryDSL 5.0.0
 - Docker, MySQL
-- TestContainer, Junit5, Mockito
+- TestContainers, Junit5, Mockito
 - AWS EC2, RDS, ParameterStore
 - Google SMTP
-- JWT
 - Nginx, Certbot(Let`s Encrypt)
 - GitHub Actions, AWS CodeDeploy, AWS S3
 
