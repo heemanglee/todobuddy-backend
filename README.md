@@ -8,7 +8,7 @@
 
 ## 🛠️ 아키텍처
 ### 개발 도구
-<img src="https://github.com/user-attachments/assets/24955daf-a969-40b3-a3a5-f65ae54bc333" width="1000"/>
+<img src="https://github.com/user-attachments/assets/8c20acc8-5d21-4c50-95ec-6500a9c90aab" width="1000"/>
 
 - Java 17
 - SpringBoot 3.3.2, Spring Data JPA, Spring Data Redis
@@ -21,6 +21,7 @@
 - Google SMTP
 - Nginx, Certbot(Let`s Encrypt)
 - GitHub Actions, AWS CodeDeploy, AWS S3
+- AWS CloudWatch
 
 <br>
 
