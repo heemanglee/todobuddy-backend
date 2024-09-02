@@ -6,7 +6,9 @@ import com.todobuddy.backend.service.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
 @Tag(name = "Auth", description = "Auth API")
+@SecurityRequirement(name = "bearerAuth")
 public class AuthController {
 
     private final AuthService authService;
@@ -27,9 +30,9 @@ public class AuthController {
         @ApiResponse(responseCode = "201", description = "Access Token 재발급 성공")
     })
     @PostMapping("/reissue")
-    public Response<AuthResponse> refreshToken(
-        @RequestHeader("Authorization") String refreshToken) {
-        AuthResponse response = authService.refreshToken(refreshToken);
+    public Response<AuthResponse> refreshToken(HttpServletRequest request) {
+        String authorization = request.getHeader("Authorization");
+        AuthResponse response = authService.refreshToken(authorization);
         return Response.of(HttpStatus.CREATED, response);
     }
 }

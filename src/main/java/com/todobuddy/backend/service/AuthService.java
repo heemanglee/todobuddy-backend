@@ -22,9 +22,9 @@ public class AuthService {
     private final UserRepository userRepository;
 
     @Transactional
-    public AuthResponse refreshToken(String refreshToken) {
+    public AuthResponse refreshToken(String authorization) {
         try {
-            String extractRefreshToken = extractBearerToken(refreshToken);
+            String extractRefreshToken = extractBearerToken(authorization);
             Claims claims = jwtTokenProvider.validateToken(extractRefreshToken); // Refresh Token 유효성 검사
             String email = claims.getSubject(); // Refresh Token에서 이메일 추출
 
