@@ -1,37 +1,45 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<configuration packagingData="true">
-  <timestamp key="timestamp" datePattern="yyyy-MM-dd-HH-mm-ssSSS"/>
+<?xml version="1.0" encoding="UTF-8" ?>
+<configuration>
+  <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter"/>
+  <conversionRule conversionWord="wex"
+    converterClass="org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter"/>
+  <conversionRule conversionWord="wEx"
+    converterClass="org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter"/>
+  <property name="LOG_PATTERN"
+    value="${LOG_PATTERN:-%clr(%d{${LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd HH:mm:ss}}){blue} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}"/>
+
+  <springProperty name="AWS_ACCESS_KEY" source="cloud.aws.credentials.access-key"/>
+  <springProperty name="AWS_SECRET_KEY" source="cloud.aws.credentials.secret-key"/>
+
+  <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+    <layout class="ch.qos.logback.classic.PatternLayout">
+      <Pattern>${LOG_PATTERN}</Pattern>
+    </layout>
+  </appender>
 
   <appender name="aws_cloud_watch_log" class="ca.pjer.logback.AwsLogsAppender">
     <layout>
       <pattern>[%thread] [%date] [%level] [%file:%line] - %msg%n</pattern>
     </layout>
-    <logGroupName>prod-log</logGroupName>
-    <logStreamUuidPrefix>prod-log-</logStreamUuidPrefix>
+    <logGroupName>todobuddy-prod-log</logGroupName>
+    <logStreamUuidPrefix>todobuddy-prod-log-</logStreamUuidPrefix>
     <logRegion>ap-northeast-2</logRegion>
     <maxBatchLogEvents>50</maxBatchLogEvents>
     <maxFlushTimeMillis>30000</maxFlushTimeMillis>
     <maxBlockTimeMillis>5000</maxBlockTimeMillis>
     <retentionTimeDays>0</retentionTimeDays>
-    <accessKeyId>${AWS.ACCESS.KEY}</accessKeyId>
-    <secretAccessKey>${AWS.SECRET.KEY}</secretAccessKey>
+    <accessKeyId>${AWS_ACCESS_KEY}</accessKeyId>
+    <secretAccessKey>${AWS_SECRET_KEY}</secretAccessKey>
   </appender>
-
-  <property name="CONSOLE_LOG_PATTERN" value="%highlight(%-5level) %date [%thread] %cyan([%C{0} :: %M :: %L]) - %msg%n"/>
-  <appender name="console_log" class="ch.qos.logback.core.ConsoleAppender">
-    <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-      <pattern>${CONSOLE_LOG_PATTERN}</pattern>
-    </encoder>
-  </appender>
-
   <springProfile name="local">
     <root level="INFO">
-      <appender-ref ref="console_log"/>
+      <appender-ref ref="CONSOLE"/>
     </root>
   </springProfile>
 
   <springProfile name="prod">
     <root level="INFO">
+      <appender-ref ref="CONSOLE"/>
       <appender-ref ref="aws_cloud_watch_log"/>
     </root>
   </springProfile>
