@@ -24,14 +24,14 @@ public class AuthService {
     @Transactional
     public AuthResponse refreshToken(String refreshToken) {
         try {
-            String extractBearerToken = extractBearerToken(refreshToken);
-            Claims claims = jwtTokenProvider.validateToken(extractBearerToken); // Refresh Token 유효성 검사
+            String extractRefreshToken = extractBearerToken(refreshToken);
+            Claims claims = jwtTokenProvider.validateToken(extractRefreshToken); // Refresh Token 유효성 검사
             String email = claims.getSubject(); // Refresh Token에서 이메일 추출
 
             User findUser = findUserByEmail(email);
 
             String newAccessToken = jwtTokenProvider.generateAccessToken(findUser); // 새로운 Access Token 발급
-            return new AuthResponse(newAccessToken, extractBearerToken, jwtTokenProvider.getExpirationDateFromToken(refreshToken), "Bearer");
+            return new AuthResponse(newAccessToken, extractRefreshToken, jwtTokenProvider.getExpirationDateFromToken(extractRefreshToken), "Bearer");
         } catch (ExpiredJwtException e) { // Refresh Token 만료
             throw new TokenExpiredException(JwtErrorCode.EXPIRED_TOKEN);
         }
