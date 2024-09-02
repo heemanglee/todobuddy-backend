@@ -50,3 +50,9 @@ aws:
     prefix: /config
     profile-separator: _
     name: todobuddy
+
+cloud:
+  aws:
+    credentials:
+      access-key: ${AWS.ACCESS.KEY}
+      secret-key: ${AWS.SECRET.KEY}
