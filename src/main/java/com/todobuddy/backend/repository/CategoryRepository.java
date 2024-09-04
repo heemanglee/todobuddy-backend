@@ -13,7 +13,7 @@ public interface CategoryRepository extends JpaRepository<Category, Long>, Categ
     Long countByUser(User user);
 
     @Modifying(clearAutomatically = true)
-    @Query("UPDATE Category c SET c.deleted = 1 WHERE c.id IN :ids")
+    @Query("DELETE FROM Category c WHERE c.id IN :ids")
     void deleteAllByIdInQuery(@Param("ids") List<Long> ids);
 
     List<Category> findByUser(User user);
