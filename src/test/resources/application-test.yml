@@ -41,3 +41,4 @@ jwt:
   issuer: "11"
 
 server.domain: "test"
+FRONT.DOMAIN: "test"

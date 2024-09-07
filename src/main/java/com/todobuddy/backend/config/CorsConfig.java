@@ -13,6 +13,8 @@ public class CorsConfig {
 
     @Value("${server.domain}")
     private String doamin; // static 변수에 @Value를 사용하면 null이 저장된다.
+    @Value("${front.domain}")
+    private String frontDomain;
 
     public CorsConfigurationSource corsConfiguration() {
         CorsConfiguration configuration = new CorsConfiguration();
@@ -40,6 +42,7 @@ public class CorsConfig {
         allowedOriginPatterns.add("http://localhost:3000");
         allowedOriginPatterns.add("http://127.0.0.1:3000");
         allowedOriginPatterns.add(doamin);
+        allowedOriginPatterns.add(frontDomain);
         return allowedOriginPatterns;
     }
 }

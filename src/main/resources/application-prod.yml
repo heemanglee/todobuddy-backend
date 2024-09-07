@@ -43,6 +43,7 @@ jwt:
   issuer: ${JWT.ISSUER}
 
 server.domain: ${SERVER.DOMAIN}
+front.domain: ${FRONT.DOMAIN}
 
 aws:
   paramstore:

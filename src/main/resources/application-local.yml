@@ -42,3 +42,4 @@ jwt:
   issuer: ${JWT_ISSUER}
 
 server.domain: "http://localhost:8080"
+front.domain : "test"
